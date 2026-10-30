@@ -1,6 +1,6 @@
 # Assistant preview implementation ledger
 
-Updated 2026-10-29 (America/Los_Angeles).
+Updated 2026-10-29 (America/Los_Angeles). **Implemented, verified, packaged and locally deployed: 0.13.0 (`00cb4830`).**
 
 Private local preview. No push or public release is authorized.
 
@@ -8,9 +8,9 @@ Private local preview. No push or public release is authorized.
 | --- | --- | --- | --- |
 | Shared stack and native panel | Primary | Verified | One model, visible toolbar/View toggles, Settings, app-local history; depends on shared bf932b9 |
 | Workbook adapter | workbook_host | Verified | Bounded scoped commands, validation/protection, exact read-back, Undo and synthetic tests |
-| Preview packaging | preview_package | In progress | Separate identity/profile, updater opt-out, ARM64 DMG/checksum and extracted-app checks |
+| Preview packaging | preview_package | Verified | Separate identity/profile, updater opt-out, ARM64 DMG/checksum and extracted-app checks |
 | Integrated verification | Primary | Verified | cargo xtask ci, synthetic workbook acceptance, panel/Settings visual inspection |
-| Local installation | Primary | Not started | Install verified bundle only; preserve original app and running unsaved work |
+| Local installation | Primary | Deployed | Install verified bundle only; preserve original app and running unsaved work |
 | Other Mac | User acceptance | Not started | Launch, platform approval and independent provider setup/inference |
 
 References inspected: GridCraft `39a10b1342c4896edb39d2020c65e296115e6271`, WordCraft
@@ -64,3 +64,76 @@ Evidence: `/private/tmp/gridcraft-assistant-acceptance/` contains synthetic conf
 The panel and Settings screenshots were visually inspected. The native updater-disabled message
 was verified. The clean test app quit and its temporary 17979 listener was released.
 Release packaging/installation and other-Mac acceptance are **not yet performed** at this checkpoint.
+
+## Delivered preview — final checkpoint
+
+Source: **`00cb483042bed283c8b35d0e8513ea0f025495fb`**, branch `codex/assistant-preview`.
+Shared libraries: **`bf932b91643c287502d539b88f08abd5796c9447`**.
+The implementation commit passed all ten CI stages; 44 assistant regressions passed among
+2,772 ordinary tests (one unrelated test ignored). No push or public release was performed.
+The delivery documentation commit is separate from the binary source; find it with
+`git log -1 --format=%H -- docs/assistant-implementation.md`.
+
+| State | Evidence |
+| --- | --- |
+| Implemented | Shared native single-model pane/settings/providers/history; guarded workbook tools and automatic read-back; separate profile and updater opt-out |
+| Tested | Full CI, candidate and exact installed-app synthetic tests, native panel/Settings/View screenshots, narrow layout/long history titles, safe connection/context failures, fresh-process XLSX reopen |
+| Packaged | ARM64 release, version/source checked; assembled app, ZIP extraction, mounted DMG and DMG-extracted copy passed strict deep signature verification |
+| Deployed | `/Applications/GridCraft Assistant Preview.app`, version `GridCraft 0.13.0 (00cb4830)`; no prior preview existed to replace; main app and main preferences hashes unchanged |
+| Other Mac | Not started: independent launch/provider/credential/tool/Undo/save-reopen acceptance required |
+
+Release build: `cargo build --release --locked -p gridcraft` with `GRIDCRAFT_BUILD_SHA` set
+to the source commit and the required pinned font input. Existing dependency cache:
+`/private/tmp/wordcraft-preview-delivery-build`; no sibling source changed. Build passed in
+3m17s. Log: `/private/tmp/gridcraft-assistant-release-build.log`. Package log:
+`/private/tmp/gridcraft-assistant-package.log`; install receipt:
+`/private/tmp/gridcraft-assistant-install.json`.
+
+Artifacts under `/Users/andy/Dev/gridcraft/dist/assistant-preview/00cb4830/`:
+
+- `gridcraft-assistant-preview-0.13.0-00cb4830-macos-aarch64.dmg` and `.dmg.sha256`
+- `gridcraft-assistant-preview-0.13.0-00cb4830-macos-aarch64.zip` and `.zip.sha256`
+- `gridcraft-assistant-preview-0.13.0-00cb4830-macos-aarch64-INSTALL.md`
+
+DMG SHA-256: `4a8519282f1fe6be4dd4587658778cd3d90f5ca4aeba509543f816da8c348214`.
+ZIP SHA-256: `53d28840b87302fcda7f5edd8cfed86f283402e6785d34c0f342094183a303a4`.
+Installed signed native executable SHA-256:
+`6e24d4411d3b701e175bfc4e21ff65292a3f9b8282c7a1e59987b4920438f28a`.
+Main GridCraft executable remains:
+`8d24fd49968536842afb640185251a54fd7432fb2609ffb9ecc3f82199c0d33a`.
+
+Signing is **local ad-hoc, not Developer ID signed and not notarized**. Minimum macOS from the
+binary/bundle is 11.0; only Apple silicon is packaged. Font licences accompany the app. The
+portable launcher derives its profile from the receiving user's HOME and ships no credentials,
+settings, conversations, Codex installation or Ollama weights.
+
+### Installed native acceptance and honest limits
+
+The first installed trial completed the read/write and exact formula/value verification but its
+final provider summary timed out at the unchanged 180-second default. A control request also
+timed out during that trial. The app recovered without termination; thread samples did not
+establish an AccessKit deadlock. Independent reads confirmed 10, 20, 30 and unchanged sentinels;
+one Undo restored the baseline, both states were saved and the clean app quit. That interrupted
+operation was never replayed. Evidence: `/private/tmp/gridcraft-assistant-installed-acceptance/`
+and its `timeout-verification.json`. Resource pressure was observed but its cause is unproven.
+
+A **fresh** installed-app conversation, with an explicit 300-second timeout in its disposable
+`runtime.json` and a concise completion request, passed the complete turn. The same existing
+Ollama model made one `write_range`, returned actual formula/value read-back and replied Done;
+one Undo restored the complete baseline. No app defaults or normal shared bindings changed.
+Evidence: `/private/tmp/gridcraft-assistant-installed-final/verification.json`, `live-result.json`,
+`trace.json`, saved XLSX fixtures and visually inspected screenshots. Model latency/reliability
+remains workload dependent; this is not a performance benchmark.
+
+A normal **LaunchServices bundle launch** then reopened the edited XLSX: values 10, 20, 30,
+`=SUM(B1:B2)`, and the other-sheet sentinel survived. The preview created and persisted its own
+normal profile at `~/Library/Application Support/GridCraft Assistant Preview`; the main
+GridCraft preferences hash was unchanged. An isolated 2,048-byte context budget failed clearly
+before workbook edits. The native View and toolbar open indicators, Settings, provider-failure
+and context-limit messages were visually inspected. The clean app quit and temporary loopback
+17979 was verified released. There is no assistant-owned permanent listener or autostart.
+
+Remaining acceptance: the other Mac's Gatekeeper approval and independent Codex/Ollama setup,
+platform credential access, synthetic editing/read-back/Undo/save-reopen. Live Codex and hosted
+provider inference were not performed here; deterministic routing and failure tests cover both
+Codex and Ollama without fallback. No private workbook or paid inference was used.

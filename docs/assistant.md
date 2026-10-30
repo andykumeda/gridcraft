@@ -1,6 +1,8 @@
 # Integrated assistant preview
 
-Updated 2026-10-29 (America/Los_Angeles). Implementation and delivery evidence:
+Updated 2026-10-29 (America/Los_Angeles). Preview **0.13.0 (`00cb4830`)** is installed at
+`/Applications/GridCraft Assistant Preview.app`. Full CI and installed Ollama edit/read-back/Undo
+plus save/reopen checks passed. Implementation and delivery evidence:
 [task ledger](assistant-implementation.md). This is a private preview, not an upstream release.
 
 Open **Assistant** in the title toolbar or **View → Assistant**. Both controls indicate whether
@@ -93,3 +95,8 @@ rebuilt and repackaged. There is no separate assistant service.
 See [packaging and rollback instructions](../packaging/macos/assistant-preview.md).
 Other Macs require independent Codex sign-in or local provider setup. Ad-hoc signing is not
 notarization; receiving-Mac acceptance is recorded separately from local delivery.
+
+Local-model acceptance included a final-summary timeout after a correct, undoable edit. A fresh
+conversation completed with an explicitly configured 300-second test timeout; the application
+default remains 180 seconds. A timeout never authorizes replaying an uncertain operation. Inspect
+the workbook and tool outcomes first. Other-Mac and live Codex acceptance remain separate checks.
