@@ -65,6 +65,8 @@ fn tree() -> Vec<(&'static str, Vec<Entry>)> {
         (
             "View",
             vec![
+                ("Assistant", "ui.assistant", None),
+                ("-", "", None),
                 ("Normal", "view.normal", None),
                 ("Page Layout", "view.pageLayout", None),
                 ("Page Break Preview", "view.pageBreakPreview", None),
@@ -391,6 +393,13 @@ impl NativeMenu {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn view_menu_opens_the_integrated_assistant() {
+        let tree = tree();
+        let (_, view) = tree.iter().find(|(title, _)| *title == "View").expect("View menu");
+        assert!(view.iter().any(|entry| entry.0 == "Assistant" && entry.1 == "ui.assistant"));
+    }
 
     #[test]
     fn file_menu_has_export_as_pdf_dispatching_the_command() {

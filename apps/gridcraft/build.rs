@@ -7,6 +7,9 @@
 
 fn main() {
     println!("cargo:rerun-if-changed=build.rs");
+    println!("cargo:rerun-if-env-changed=GRIDCRAFT_BUILD_SHA");
+    let commit = std::env::var("GRIDCRAFT_BUILD_SHA").unwrap_or_else(|_| "uncommitted".into());
+    println!("cargo:rustc-env=GRIDCRAFT_BUILD_SHA={commit}");
     println!("cargo:rerun-if-changed=../../assets/app-icon/gridcraft.ico");
     println!("cargo:rerun-if-env-changed=GRIDCRAFT_REQUIRE_WINRES");
     if std::env::var("CARGO_CFG_TARGET_OS").as_deref() != Ok("windows") {

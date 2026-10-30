@@ -2,7 +2,7 @@
 
 **Stage: alpha** · next: beta, ~25 points of "ready for real work" and ~160–240 h away
 
-> **Last reviewed:** 2026-10-11 · **Last updated:** 2026-10-25 · **Change:** minor (AutoSum over a selected row puts its total to the right, and fills a selection's empty last row and column; earlier: macro engine and `macro.*` commands; macro interface on the Automate tab) · **Target:** Microsoft Excel (Microsoft 365)
+> **Last reviewed:** 2026-10-11 · **Last updated:** 2026-10-29 · **Change:** minor (AutoSum over a selected row puts its total to the right, and fills a selection's empty last row and column; earlier: macro engine and `macro.*` commands; macro interface on the Automate tab) · **Target:** Microsoft Excel (Microsoft 365)
 
 GridCraft aims at full Microsoft Excel parity, and at being better in places: faster, open (XLSX
 is the native format), fully scriptable by agents (MCP, control channel, CLI), and on the web.
@@ -244,6 +244,7 @@ Ranked; estimates in Opus 5.5 agent-hours. Detail and the full beta-gate list in
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-10-29 | minor | Private integrated assistant preview; shared provider/settings UI, bounded workbook commands, separate package and updater isolation; verification recorded in assistant ledger |
 | 2026-10-25 | minor | Progress log: AutoSum over a selected row, and a selection's empty last row and column |
 | 2026-10-24 | minor | Macro interface on the Automate tab; progress log row |
 | 2026-10-24 | minor | Macro engine and `macro.*` commands; catalog 275 / 291 → 276 / 292 (View › Macros › Record Macro); progress log row |
@@ -298,3 +299,5 @@ Ranked; estimates in Opus 5.5 agent-hours. Detail and the full beta-gate list in
 | 2026-10-10 | minor | Checked against the alpha gate (six core workflows pass): stays alpha |
 | 2026-10-10 | major | Re-measured against Excel for Mac 16.113.4: stage alpha, breadth ~75%, ready ~50%, ~160–240 h to beta, ~700–1,100 h to full parity; restructured to the progress-docs standard; detail moved to `docs/` |
 | 2026-10-07 | major | First estimates: catalog 89%, functions ~93%, depth ~65%, ~35 h to alpha, ~215 h to full parity |
+
+Private branch work: integrated [assistant preview](docs/assistant.md); [delivery ledger](docs/assistant-implementation.md) tracks implementation, verification, packaging and local installation independently. This does not change upstream Excel-parity assessments.

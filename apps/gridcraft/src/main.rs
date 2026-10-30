@@ -78,6 +78,9 @@ impl eframe::App for App {
 }
 
 fn config_dir() -> Option<std::path::PathBuf> {
+    if let Some(dir) = std::env::var_os("GRIDCRAFT_PROFILE_DIR").filter(|dir| !dir.is_empty()) {
+        return Some(std::path::PathBuf::from(dir));
+    }
     if cfg!(target_os = "macos") {
         std::env::var_os("HOME").map(|h| std::path::PathBuf::from(h).join("Library/Application Support/GridCraft"))
     } else if cfg!(windows) {
@@ -255,8 +258,11 @@ fn main() -> eframe::Result<()> {
         }
     }));
     let args: Vec<String> = std::env::args().skip(1).collect();
+    let disable_updates = args.iter().any(|arg| arg == "--disable-updates");
     // The restart helper a self-update spawns: it finishes the swap and relaunches, then exits.
-    if let Some(done) = craft_update::self_update::finish(&craft_update::suite::GRIDCRAFT, &std::env::args_os().skip(1).collect::<Vec<_>>()) {
+    if !disable_updates
+        && let Some(done) = craft_update::self_update::finish(&craft_update::suite::GRIDCRAFT, &std::env::args_os().skip(1).collect::<Vec<_>>())
+    {
         if let Err(e) = done {
             eprintln!("GridCraft update helper failed: {e}");
             std::process::exit(1);
@@ -264,7 +270,14 @@ fn main() -> eframe::Result<()> {
         return Ok(());
     }
     if args.iter().any(|a| a == "--version" || a == "-V") {
-        println!("GridCraft {}", env!("CARGO_PKG_VERSION"));
+        println!("GridCraft {} ({})", env!("CARGO_PKG_VERSION"), env!("GRIDCRAFT_BUILD_SHA").get(..8).unwrap_or(env!("GRIDCRAFT_BUILD_SHA")));
+        return Ok(());
+    }
+    if args.iter().any(|arg| arg == "--help" || arg == "-h") {
+        println!(
+            "GridCraft {}\nUsage: gridcraft [--sample NAME] [--control PORT] [files…]\n  --disable-updates  disable startup and manual updates for separately packaged builds\n  --version          print version and source commit",
+            env!("CARGO_PKG_VERSION")
+        );
         return Ok(());
     }
     let mut control_port: Option<u16> = std::env::var("GRIDCRAFT_CONTROL_PORT").ok().and_then(|p| p.parse().ok());
@@ -286,6 +299,7 @@ fn main() -> eframe::Result<()> {
                 i += 1;
                 sample = Some(args.get(i).cloned().unwrap_or_else(|| "sales".into()));
             }
+            "--disable-updates" => {}
             a if a.starts_with("-psn_") => {}
             a => files.push(a.to_string()),
         }
@@ -316,6 +330,9 @@ fn main() -> eframe::Result<()> {
     }
     let mut app = SheetApp::new(session, services());
     app.watch_desktop_theme();
+    if disable_updates {
+        app.disable_updates();
+    }
     app.start_update_check();
     app.after_engine(); // Show warnings from the sample.
     let control_port = control_port;

@@ -7,6 +7,7 @@
 // unit tests compile here too without a harness to run them).
 #[cfg(target_os = "macos")]
 #[path = "../src/native_menu.rs"]
+#[allow(dead_code, unused_imports)] // This no-harness probe uses only installation from the app module.
 mod native_menu;
 
 #[cfg(target_os = "macos")]

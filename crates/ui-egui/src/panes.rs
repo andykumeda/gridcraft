@@ -7,6 +7,20 @@ use crate::SheetApp;
 use crate::theme::{self, Tokens};
 
 pub fn show(app: &mut SheetApp, ui: &mut Ui) {
+    if app.assistant.open {
+        let max = (ui.available_width() * 0.6).max(300.0);
+        egui::Panel::right("assistant_pane").default_size(380.0).max_size(max).resizable(true).show(ui, |ui| {
+            ui.horizontal(|ui| {
+                ui.heading("Assistant");
+                if ui.button("Close").clicked() {
+                    app.assistant.open = false;
+                }
+            });
+            crate::assistant::pane(app, ui);
+        });
+        return;
+    }
+
     // The Comments pane is engine state (`review.showComments`, so agents can drive it); the other
     // panes are UI state. One pane shows at a time: opening another one closes Comments.
     if app.grid.pane.as_deref() == Some("comments") {

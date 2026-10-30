@@ -28,6 +28,7 @@ impl SheetApp {
     pub fn new(session: Session, services: Services) -> SheetApp {
         SheetApp {
             session,
+            assistant: Default::default(),
             ui: UiState::default(),
             chrome: Chrome::default(),
             views: HashMap::new(),
@@ -127,6 +128,7 @@ impl SheetApp {
         // issues the capture command (after every widget, so a command cannot be missed).
         control::drain_screenshots(self, ctx);
         control::poll(self, ctx);
+        crate::assistant::poll(self, ctx);
         // Printing feedback is polled once per frame, here, so hidden windows and logic-only
         // frames still see worker completion. `ui` and the desktop app no longer poll it.
         self.poll_printing(ctx);

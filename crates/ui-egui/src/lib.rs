@@ -57,6 +57,7 @@ use serde_json::{Value as Json, json};
 pub use control::{ControlRequest, ControlResponse};
 
 mod app;
+mod assistant;
 mod clock;
 mod services;
 mod state;
@@ -191,6 +192,7 @@ pub struct Perf {
 }
 
 pub struct SheetApp {
+    assistant: assistant::Assistant,
     pub session: Session,
     pub ui: UiState,
     /// The window chrome to draw (see [`Chrome`]).

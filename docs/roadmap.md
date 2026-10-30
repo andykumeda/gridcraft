@@ -1,6 +1,6 @@
 # Roadmap detail
 
-> **Last reviewed:** 2026-10-11 · **Last updated:** 2026-10-23 · **Change:** minor (test command) · **Target:** Microsoft Excel (Microsoft 365)
+> **Last reviewed:** 2026-10-11 · **Last updated:** 2026-10-29 · **Change:** minor (private integrated assistant preview) · **Target:** Microsoft Excel (Microsoft 365)
 
 Forward-looking plan. The one-page summary is [`ROADMAP.md`](../ROADMAP.md); the ranked work
 list is [`gaps.md`](gaps.md); numbers and method are in
@@ -113,8 +113,11 @@ to check our files, and Windows machines with the reported GPU drivers.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-10-29 | minor | Private integrated assistant preview; shared provider/settings UI, bounded workbook commands, separate package and updater isolation; verification recorded in assistant ledger |
 | 2026-10-23 | minor | Measuring: tests run through `cargo xtask test` |
 | 2026-10-11 | minor | PivotTable calculated fields landed |
 | 2026-10-10 | minor | Current focus and M15 updated for the 10-10 merges |
 | 2026-10-10 | minor | Added the alpha gate table (six core workflows; passes, stays alpha) |
 | 2026-10-10 | major | Created: current focus, beta gates (~160–240 h), milestones moved from ROADMAP.md, post-beta ranking |
+
+Private assistant preview: [behavior](assistant.md) and [implementation/delivery ledger](assistant-implementation.md). Assistant integration does not change the existing Excel-parity assessment.

@@ -3,6 +3,10 @@ use super::{Icon, Rect, SheetApp, Tokens, Ui, big_button, json, keytip_table, po
 
 /// Draws the View tab: view modes, ruler/gridlines/formula-bar/headings toggles, zoom, freeze panes, theme, animations, interface size and language.
 pub(super) fn view(app: &mut SheetApp, ui: &mut Ui) {
+    if ui.selectable_label(app.assistant.open, app.ui.language.tr("Assistant")).clicked() {
+        app.run_or_alert("ui.assistant", json!({}));
+    }
+    sep(ui);
     let t = Tokens::get(ui.ctx());
     let _ = t;
     for (icon, label, cmd) in [

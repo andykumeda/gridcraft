@@ -26,6 +26,9 @@ pub(super) fn options(app: &mut SheetApp, ui: &mut Ui) {
     if ui.checkbox(&mut autosave, lang.tr("Save .xlsx workbooks automatically after every change")).changed() {
         app.toggle_autosave();
     }
+    ui.add_space(18.0);
+    section(ui, lang, "Assistant");
+    crate::assistant::settings(app, ui);
     let Some(calc) = app.session.active().map(|d| d.wb.calc.clone()) else { return };
     ui.add_space(18.0);
     section(ui, lang, "Formulas");

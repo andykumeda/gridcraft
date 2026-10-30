@@ -347,3 +347,7 @@ Forks and modified versions must remove them.
   <a href="https://getartcraft.com/"><img alt="ArtCraft" src="docs/brand/artcraft-mark.svg" width="28"></a><br>
   <sub>Made by the <a href="https://getartcraft.com/">ArtCraft</a> team and community.</sub>
 </p>
+
+## Private assistant preview
+
+The integrated [assistant preview](docs/assistant.md) adds a native workbook assistant using shared Craft providers. Open the toolbar **Assistant** button or **View → Assistant**. Configure one model under **File → Options → Assistant**. Delivery status and checks are in the [implementation ledger](docs/assistant-implementation.md); [packaging](packaging/macos/assistant-preview.md) preserves the main installed application.

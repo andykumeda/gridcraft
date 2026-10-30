@@ -47,7 +47,8 @@ pub const TABLE: &[(&str, Class)] = &[
 
 /// Explicit orderings *within* a layer (earlier may be used by later). Each chain is separate:
 /// `calc` and `xlsx` both build on `model` but not on each other.
-pub const INTRA_LAYER_ORDER: &[&[&str]] = &[&["core", "numfmt"], &["formula", "functions"], &["model", "calc"], &["model", "xlsx"]];
+pub const INTRA_LAYER_ORDER: &[&[&str]] =
+    &[&["core", "numfmt"], &["formula", "functions"], &["model", "calc"], &["model", "xlsx"], &["mcp", "ui-egui"]];
 
 fn intra_layer_allowed(from: &str, to: &str) -> bool {
     let (from, to) = (short_name(from), short_name(to));
@@ -249,7 +250,7 @@ mod tests {
     fn sideways_dependency_flagged() {
         let v = check(&[c("gridcraft-xlsx", &[("gridcraft-calc", Normal, true)])]);
         assert!(v.iter().any(|x| matches!(x, Violation::Upward { from: 2, to: 2, .. })), "{v:?}");
-        let v = check(&[c("gridcraft-ui-egui", &[("gridcraft-mcp", Normal, true)])]);
+        let v = check(&[c("gridcraft-mcp", &[("gridcraft-ui-egui", Normal, true)])]);
         assert!(matches!(v[..], [Violation::Upward { from: 6, to: 6, .. }]));
     }
 
@@ -261,6 +262,8 @@ mod tests {
         assert!(check(&[c("gridcraft-calc", &[("gridcraft-model", Normal, true)])]).is_empty());
         assert!(!check(&[c("gridcraft-model", &[("gridcraft-calc", Normal, true)])]).is_empty());
         assert!(!check(&[c("gridcraft-calc", &[("gridcraft-xlsx", Normal, true)])]).is_empty());
+        assert!(check(&[c("gridcraft-ui-egui", &[("gridcraft-mcp", Normal, true)])]).is_empty());
+        assert!(!check(&[c("gridcraft-mcp", &[("gridcraft-ui-egui", Normal, true)])]).is_empty());
     }
 
     #[test]

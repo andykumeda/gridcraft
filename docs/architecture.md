@@ -1,6 +1,6 @@
 # Architecture
 
-> **Last reviewed:** 2026-10-10 · **Last updated:** 2026-10-25 · **Change:** trivial (the hidden names that hold macros; earlier: macro engine on the engine building blocks) · **Target:** Microsoft Excel (Microsoft 365)
+> **Last reviewed:** 2026-10-10 · **Last updated:** 2026-10-29 · **Change:** minor (integrated assistant preview architecture) · **Target:** Microsoft Excel (Microsoft 365)
 
 How GridCraft is built today. Rules for contributors are in [`AGENTS.md`](../AGENTS.md).
 
@@ -134,6 +134,15 @@ The macro engine (`engine/src/macros/`, commands in `cmd/macros.rs`, described i
 recording buffer, the policy asks before a macro in a `FromFile` workbook runs, and xlsx keeps
 macros as chunked hidden names (`_gc_macro_<n>_<k>`: macro `n`, chunk `k`).
 
+## Integrated assistant
+
+The desktop UI hosts the shared Craft assistant pane and native services. A scoped internal tool
+channel executes validated GridCraft commands on the UI thread with bounded reads, validation,
+protection, automatic read-back and Undo. The existing L6 MCP tool adapter is reused by L6 UI;
+that one-way dependency is explicitly checked by `xtask layers`. No engine dependency on UI or
+native providers is introduced. See [assistant.md](assistant.md) and the
+[implementation ledger](assistant-implementation.md) for capabilities and verified delivery state.
+
 ## Agent control
 
 - Desktop control channel: `gridcraft --control 7979`, JSON lines on localhost
@@ -159,6 +168,7 @@ rpm, tarball), FreeBSD, and web (WASM; WebGPU or WebGL2). Release workflows in
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-10-29 | minor | Private integrated assistant preview; shared provider/settings UI, bounded workbook commands, separate package and updater isolation; verification recorded in assistant ledger |
 | 2026-10-25 | trivial | The hidden names that hold macros are `_gc_macro_<n>_<k>` |
 | 2026-10-24 | minor | Macro engine on the building blocks (`macros/`, `cmd/macros.rs`) |
 | 2026-10-24 | minor | Engine building blocks for multi-command actions: undo groups, recording buffer, document trust, chunked hidden-name storage |
