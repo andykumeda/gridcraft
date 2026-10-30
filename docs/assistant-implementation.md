@@ -11,6 +11,7 @@ Private local preview. No push or public release is authorized.
 | Preview packaging | preview_package | Verified | Separate identity/profile, updater opt-out, ARM64 DMG/checksum and extracted-app checks |
 | Integrated verification | Primary | Verified | cargo xtask ci, synthetic workbook acceptance, panel/Settings visual inspection |
 | Local installation | Primary | Deployed | Install verified bundle only; preserve original app and running unsaved work |
+| Live Codex acceptance | Primary | Verified | Installed Terra edit, actual read-back, one Undo, edited/restored XLSX fresh-process reopen |
 | Other Mac | User acceptance | Not started | Launch, platform approval and independent provider setup/inference |
 
 References inspected: GridCraft `39a10b1342c4896edb39d2020c65e296115e6271`, WordCraft
@@ -134,6 +135,43 @@ and context-limit messages were visually inspected. The clean app quit and tempo
 17979 was verified released. There is no assistant-owned permanent listener or autostart.
 
 Remaining acceptance: the other Mac's Gatekeeper approval and independent Codex/Ollama setup,
-platform credential access, synthetic editing/read-back/Undo/save-reopen. Live Codex and hosted
-provider inference were not performed here; deterministic routing and failure tests cover both
-Codex and Ollama without fallback. No private workbook or paid inference was used.
+platform credential access, synthetic editing/read-back/Undo/save-reopen. At the initial delivery, live Codex and hosted
+provider inference had not been performed. The Codex follow-up below closes this Mac's live test;
+hosted-provider and other-Mac checks remain open. No private workbook was used.
+
+## Live Codex acceptance — 2026-10-29
+
+**Verified on the installed preview; no application changes or new package required.**
+Installed binary: `0.13.0 (00cb4830)`, native SHA-256
+`6e24d4411d3b701e175bfc4e21ff65292a3f9b8282c7a1e59987b4920438f28a`.
+Shared implementation: `bf932b91643c287502d539b88f08abd5796c9447`; Codex CLI `0.165.0`.
+
+The existing Craft Codex connection and WordCraft's configured `gpt-6.1-terra` model were selected
+explicitly in disposable GridCraft settings. Only the existing isolated Craft Codex home was
+referenced by a temporary directory symlink; no authentication files were copied into the
+test artifacts, and the filesystem reference was removed after both test processes quit. The normal shared
+connections/settings file hash, main GridCraft executable hash and preview executable hash were
+unchanged. No coding-assistant account, model fallback or private workbook was used.
+
+The native assistant completed one uninterrupted live turn with actual `read_range` and
+`write_range` callbacks, ending with Done. Its effective route was **Codex account /
+`gpt-6.1-terra`**. It read B1:B3, wrote exactly `[[10],[20],["=SUM(B1:B2)"]]`, and the tool returned
+authoritative formula/value read-back. Independent application reads confirmed 10, 20 and 30,
+with B3 retaining `=SUM(B1:B2)`. A1/D1 sentinels and a second sheet's sentinel stayed unchanged.
+One normal `edit.undo` restored 1, 2 and 3 and the original formula.
+
+The edited and Undo-restored workbooks were saved separately. A **fresh installed-app process**
+reopened both XLSX files and independently confirmed the edited 10/20/30 and restored 1/2/3
+values, the formula text, and the untouched second sheet. The real panel/result and reopened
+workbook screenshots were inspected. Both clean synthetic app instances quit normally; temporary
+loopback 17979 was verified released. No existing user instance was terminated or user work discarded.
+
+Synthetic evidence: `/var/folders/cg/796c5bys74db15ww0b_qvw8c0000gn/T/gridcraft-codex-acceptance-0jcmp2o_`.
+Key artifacts: `verification.json`, `reopen-verification.json`, `preservation-verification.json`,
+`trace.json`, `route-status.json`, the completed local chat journal, `Edited.xlsx`, `Restored.xlsx`,
+`panel-complete.png` and `codex-reopened.png`. No credential file or filesystem link to the account remains in
+this artifact directory. This was one representative synthetic acceptance case, not broad model
+reliability, adversarial containment or other-Mac acceptance.
+
+After this acceptance, `cargo xtask ci` passed all ten required stages again; log:
+`/private/tmp/gridcraft-codex-acceptance-ci.log`. Only verification documentation changed.

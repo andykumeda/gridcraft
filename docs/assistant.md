@@ -1,7 +1,7 @@
 # Integrated assistant preview
 
 Updated 2026-10-29 (America/Los_Angeles). Preview **0.13.0 (`00cb4830`)** is installed at
-`/Applications/GridCraft Assistant Preview.app`. Full CI and installed Ollama edit/read-back/Undo
+`/Applications/GridCraft Assistant Preview.app`. Full CI and installed Codex (Terra) and Ollama edit/read-back/Undo
 plus save/reopen checks passed. Implementation and delivery evidence:
 [task ledger](assistant-implementation.md). This is a private preview, not an upstream release.
 
@@ -99,4 +99,6 @@ notarization; receiving-Mac acceptance is recorded separately from local deliver
 Local-model acceptance included a final-summary timeout after a correct, undoable edit. A fresh
 conversation completed with an explicitly configured 300-second test timeout; the application
 default remains 180 seconds. A timeout never authorizes replaying an uncertain operation. Inspect
-the workbook and tool outcomes first. Other-Mac and live Codex acceptance remain separate checks.
+the workbook and tool outcomes first. Live Codex/Terra acceptance passed on this Mac using a synthetic two-sheet workbook, one range
+edit, actual formula/value read-back, one normal Undo and fresh-process reopen of edited and
+restored XLSX files. Other-Mac and hosted-provider acceptance remain separate checks.
