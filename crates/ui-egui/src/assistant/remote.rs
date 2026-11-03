@@ -41,6 +41,10 @@ struct Turn {
 }
 
 impl Remote {
+    pub(super) fn restart_safe(&self, widget_idle: bool) -> bool {
+        self.turn.is_none() && !self.dispatching && self.controller.as_ref().map_or(widget_idle, Controller::restart_safe)
+    }
+
     pub(super) fn cancel(&self) {
         if let Some(turn) = &self.turn {
             turn.proxy.cancel();
@@ -362,6 +366,7 @@ mod tests {
         let mut app = SheetApp::new(gridcraft_engine::Session::new(), Default::default());
         app.assistant.remote.enabled = true;
         app.assistant.remote.dispatching = true;
+        assert!(!crate::assistant::restart_safe(&app), "a taken remote turn still owns its GUI dispatch");
         let error = begin(&mut app, "Nested request".into(), vec![]).unwrap_err();
         assert!(error.contains("Finish or stop"), "{error}");
         assert!(app.assistant.remote.turn.is_none());
@@ -384,5 +389,15 @@ mod tests {
         assert!(app.assistant.remote.turn.is_none());
         assert!(!app.assistant.widget.busy);
         assert!(app.assistant.remote.controller.is_none());
+    }
+    #[test]
+    fn inactive_shared_transport_does_not_preserve_stale_widget_busy_flags() {
+        let mut app = SheetApp::new(gridcraft_engine::Session::new(), Default::default());
+        app.assistant.remote.enabled = true;
+        app.assistant.widget.busy = true;
+        app.assistant.widget.settings.busy = true;
+        assert!(!crate::assistant::restart_safe(&app), "without a controller, UI work must finish");
+        ensure_loaded(&mut app);
+        assert!(crate::assistant::restart_safe(&app), "a missing/failed transport cannot have an active helper turn");
     }
 }

@@ -86,12 +86,16 @@ pub(crate) fn tick(app: &mut SheetApp, ctx: &egui::Context) {
     }
 }
 
+fn can_restart(app: &SheetApp) -> bool {
+    !app.session.documents().iter().any(|d| d.is_dirty()) && crate::assistant::restart_safe(app)
+}
+
 pub(crate) fn show(app: &mut SheetApp, ctx: &egui::Context) {
     if app.updates_rt.disabled {
         return;
     }
-    // The restart helper is scheduled before the app closes, so no update starts over unsaved work.
-    let clean = !app.session.documents().iter().any(|d| d.is_dirty());
+    // The helper is scheduled before close: workbook edits and in-flight assistant input/turns must both be safe.
+    let clean = can_restart(app);
     match app.updates_rt.updater.show_if(ctx, clean) {
         Action::OpenUrl(url) => {
             if let Some(open) = &app.services.open_url {
@@ -127,5 +131,20 @@ mod tests {
         assert!(!app.updates_rt.startup && !app.updates_rt.manual);
         assert!(matches!(app.updates_rt.updater.status(), Status::Idle));
         assert!(app.message.as_ref().is_some_and(|(_, text)| text.contains("disabled")));
+    }
+    #[test]
+    fn app_restart_requires_idle_assistant_and_clean_workbooks() {
+        let mut app = SheetApp::new(gridcraft_engine::Session::new(), Default::default());
+        assert!(can_restart(&app));
+        app.assistant.widget.busy = true;
+        assert!(!can_restart(&app), "a clean workbook does not permit interrupting a chat");
+        app.assistant.widget.busy = false;
+        app.assistant.widget.settings.busy = true;
+        assert!(!can_restart(&app), "assistant credential/settings work must finish");
+        app.assistant.widget.settings.busy = false;
+        assert!(can_restart(&app));
+        app.session.new_workbook();
+        app.run("cell.set", serde_json::json!({"cell":"A1","input":"synthetic unsaved edit"})).unwrap();
+        assert!(!can_restart(&app), "the existing workbook safeguard remains in force");
     }
 }

@@ -43,3 +43,13 @@ path override is used. Native input/accessibility, real provider inference, inst
 Signed local standard/Preview bundles and a matching release CLI are the next delivery step;
 artifact receipts will record their source commit, identities and checksums. No installed app,
 CLI wrapper or user settings have been changed.
+
+## Installed follow-up and restart safety
+
+The initial signed candidate and independent installed smoke on both Macs are recorded in
+[the candidate ledger](assistant-candidates.md). Actual helper rendering and read-only MCP passed.
+A subsequent review found that app updates needed an additional active-assistant restart guard.
+The verified correction uses shared revision
+`986cb16234cfdac1ee1337fb4cdf00945cad4e5a`; the initially installed candidate needs replacement.
+Its full UI suite passed 326 tests; scoped all-target Clippy and WASM checks passed.
+No deployment changes are made by this correction workstream.

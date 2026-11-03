@@ -110,6 +110,12 @@ cross-app binary-unchanged update demonstrations remain unverified. The developm
 ran below 1 GiB free, so further app builds/test linking were stopped to preserve existing
 work. No published release or installed application was changed.
 
-Shared implementation pin: `andykumeda/craft-libs@3ff2754eeb1c079612247f4d288a22a20c169ac9` (task branch `codex/assistant-upstream`). All shared dependencies use that revision together. Cargo locks must resolve the published Git source, never the temporary local verification patch.
+Shared implementation pin: `andykumeda/craft-libs@986cb16234cfdac1ee1337fb4cdf00945cad4e5a` (task branch `codex/assistant-restart-safety`). All shared dependencies use that revision together. Cargo locks must resolve the published Git source, never the temporary local verification patch.
 
 The shared assistant/config/installer/updater final test run passed **228 tests, 4 ignored**. PDF production UI Clippy and Word/Grid production UI checks passed against byte-identical reviewed local source before publishing this pin. Native consumer test links were deferred for disk headroom; do not treat compilation as installed acceptance. No release or user configuration was changed.
+
+App replacement also waits for assistant turns, settings jobs, queued input and safe helper
+checkpoint state. Finish chats/settings edits and close the Assistant panel if pending rendering
+defers restart. Missing or failed helpers do not block app updates through stale busy flags.
+See [candidate and installed-smoke evidence](assistant-candidates.md) for the correction and
+remaining live-update verification.

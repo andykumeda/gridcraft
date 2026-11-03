@@ -385,6 +385,7 @@ fn stopped_turn_and_settings_jobs_are_cancelled_without_replaying_edits() {
         fresh_text: true,
         pending_activity: Vec::new(),
     });
+    assert!(!crate::assistant::restart_safe(&app), "an active native turn must block app replacement even before busy UI catches up");
     app.run("cell.set", json!({"cell":"A1","input":"retained edit"})).unwrap();
     action(&mut app, Action::Stop).unwrap();
     assert!(cancellation.is_cancelled());
@@ -533,6 +534,18 @@ fn self_stop_cancels_the_turn_while_its_gui_request_is_dispatched() {
     enable_without_profile(&mut app);
     let cancel = Cancellation::default();
     app.assistant.native.dispatch_cancel = Some(cancel.clone());
+    assert!(!crate::assistant::restart_safe(&app), "a taken turn still owns its GUI dispatch");
     action(&mut app, Action::Stop).unwrap();
     assert!(cancel.is_cancelled());
+}
+
+#[test]
+fn pending_native_settings_job_blocks_app_replacement_before_busy_ui() {
+    let mut app = app();
+    enable_without_profile(&mut app);
+    assert!(crate::assistant::restart_safe(&app));
+    app.assistant.native.job = Some(mpsc::channel().1);
+    assert!(!crate::assistant::restart_safe(&app));
+    app.assistant.native.job = None;
+    assert!(crate::assistant::restart_safe(&app));
 }

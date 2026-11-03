@@ -62,6 +62,13 @@ impl SheetApp {
     }
 }
 
+/// App replacement must preserve assistant work as well as workbook edits.
+#[cfg(not(target_arch = "wasm32"))]
+pub(crate) fn restart_safe(app: &SheetApp) -> bool {
+    let widget_idle = !app.assistant.widget.busy && !app.assistant.widget.settings.busy;
+    app.assistant.native.restart_safe() && if app.assistant.remote.enabled { app.assistant.remote.restart_safe(widget_idle) } else { widget_idle }
+}
+
 pub(crate) fn owns_keyboard(app: &SheetApp) -> bool {
     #[cfg(not(target_arch = "wasm32"))]
     {

@@ -47,6 +47,10 @@ struct Turn {
 }
 
 impl Native {
+    pub(super) fn restart_safe(&self) -> bool {
+        self.turn.is_none() && self.dispatch_cancel.is_none() && self.job.is_none()
+    }
+
     fn codex_for_turn(&mut self, root: &std::path::Path) -> CodexProvider {
         if let Some((cached_root, template)) = &self.codex_template
             && cached_root == root
