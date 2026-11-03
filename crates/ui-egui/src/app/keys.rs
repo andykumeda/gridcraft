@@ -2,6 +2,9 @@ use super::{Json, SheetApp, backstage, json, keytips};
 
 impl SheetApp {
     pub(super) fn ribbon_keys(&mut self, ctx: &egui::Context) {
+        if crate::assistant::owns_keyboard(self) {
+            return;
+        }
         let before = self.keytips.prefix().map(str::to_string);
         let enabled = self.editor.is_none()
             && self.dialog.is_none()

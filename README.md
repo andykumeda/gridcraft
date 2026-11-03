@@ -351,3 +351,9 @@ Forks and modified versions must remove them.
 ## Private assistant preview
 
 The integrated [assistant preview](docs/assistant.md) adds a native workbook assistant using shared Craft providers. Open the toolbar **Assistant** button or **View → Assistant**. Configure one model under **File → Options → Assistant**. Delivery status and checks are in the [implementation ledger](docs/assistant-implementation.md); [packaging](packaging/macos/assistant-preview.md) preserves the main installed application.
+
+## Independently updated assistant (custom desktop builds)
+
+The desktop entry point uses a separately installed shared assistant for its embedded sidebar. Model/provider defaults and authentication are shared across PDFCraft, WordCraft and GridCraft; chats and document permissions remain separate. Initial app builds must include the bridge. Compatible assistant releases then update once for all three apps without rebuilding their binaries.
+
+See [custom assistant and app updates](docs/custom-assistant-updates.md) for configuration, approved updates and compatibility safeguards. This implementation is not an installed release: native accessibility/input acceptance and signed update installation remain pending.

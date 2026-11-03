@@ -9,6 +9,8 @@ use crate::SheetApp;
 mod host;
 #[cfg(not(target_arch = "wasm32"))]
 mod native;
+#[cfg(not(target_arch = "wasm32"))]
+mod remote;
 
 pub struct Assistant {
     pub open: bool,
@@ -18,6 +20,8 @@ pub struct Assistant {
     pub(crate) effective: String,
     #[cfg(not(target_arch = "wasm32"))]
     native: native::Native,
+    #[cfg(not(target_arch = "wasm32"))]
+    remote: remote::Remote,
 }
 
 impl Default for Assistant {
@@ -30,6 +34,8 @@ impl Default for Assistant {
             effective: String::new(),
             #[cfg(not(target_arch = "wasm32"))]
             native: native::Native::default(),
+            #[cfg(not(target_arch = "wasm32"))]
+            remote: remote::Remote::default(),
         }
     }
 }
@@ -38,6 +44,33 @@ impl Drop for Assistant {
     fn drop(&mut self) {
         #[cfg(not(target_arch = "wasm32"))]
         self.native.cancel();
+        #[cfg(not(target_arch = "wasm32"))]
+        self.remote.cancel();
+    }
+}
+
+impl SheetApp {
+    /// Attaches the independently installed assistant and its explicit app-update source.
+    /// Desktop entry points call this once before startup update checks.
+    #[cfg(not(target_arch = "wasm32"))]
+    pub fn enable_shared_assistant(&mut self) {
+        self.assistant.native.cancel();
+        self.assistant.remote.enabled = true;
+        self.assistant.enabled = true;
+        self.assistant.widget.available = true;
+        self.configure_assistant_updates(craft_assistant::config::compatibility().protocol);
+    }
+}
+
+pub(crate) fn owns_keyboard(app: &SheetApp) -> bool {
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        app.assistant.remote.enabled && app.assistant.remote.owns_keyboard()
+    }
+    #[cfg(target_arch = "wasm32")]
+    {
+        let _ = app;
+        false
     }
 }
 
@@ -48,12 +81,25 @@ pub fn commands() -> Vec<Value> {
         json!({"id":"ui.assistant.newChat","label":"New assistant chat","location":"Agents","params":"{}","enabled":cfg!(not(target_arch="wasm32"))}),
         json!({"id":"ui.assistant.stop","label":"Stop assistant","location":"Agents","params":"{}","enabled":true}),
         json!({"id":"ui.assistant.status","label":"Assistant status","location":"Agents","params":"{}","enabled":true}),
+        json!({"id":"ui.assistant.updateCheck","label":"Check shared assistant updates","location":"Agents","params":"{}","enabled":cfg!(not(target_arch="wasm32"))}),
+        json!({"id":"ui.assistant.updateInstall","label":"Install offered shared assistant update","location":"Agents","params":"{}","enabled":cfg!(not(target_arch="wasm32"))}),
+        json!({"id":"ui.assistant.updateStatus","label":"Shared assistant update status","location":"Agents","params":"{}","enabled":cfg!(not(target_arch="wasm32"))}),
+        json!({"id":"ui.assistant.reloadComponent","label":"Reload shared assistant component","location":"Agents","params":"{}","enabled":cfg!(not(target_arch="wasm32"))}),
     ]
 }
 
 pub(crate) fn command(app: &mut SheetApp, id: &str, params: &Value) -> Option<Result<Value, String>> {
     if !id.starts_with("ui.assistant") {
         return None;
+    }
+    if matches!(id, "ui.assistant.updateCheck" | "ui.assistant.updateInstall" | "ui.assistant.updateStatus" | "ui.assistant.reloadComponent") {
+        if !params.as_object().is_some_and(serde_json::Map::is_empty) {
+            return Some(Err("This assistant service command takes an empty parameter object.".into()));
+        }
+        #[cfg(not(target_arch = "wasm32"))]
+        return Some(remote::service_command(app, id));
+        #[cfg(target_arch = "wasm32")]
+        return Some(Err("The shared assistant is available in the desktop app.".into()));
     }
     let result = match id {
         "ui.assistant" => {
@@ -82,6 +128,12 @@ pub(crate) fn command(app: &mut SheetApp, id: &str, params: &Value) -> Option<Re
 }
 
 pub fn pane(app: &mut SheetApp, ui: &mut egui::Ui) {
+    #[cfg(not(target_arch = "wasm32"))]
+    if app.assistant.remote.enabled {
+        app.assistant.ctx = Some(ui.ctx().clone());
+        remote::show(app, ui, false);
+        return;
+    }
     app.assistant.ctx = Some(ui.ctx().clone());
     ensure_loaded(app);
     ui.small("Uses the active workbook. Assistant file access is unavailable.");
@@ -98,6 +150,12 @@ pub fn pane(app: &mut SheetApp, ui: &mut egui::Ui) {
 }
 
 pub fn settings(app: &mut SheetApp, ui: &mut egui::Ui) {
+    #[cfg(not(target_arch = "wasm32"))]
+    if app.assistant.remote.enabled {
+        app.assistant.ctx = Some(ui.ctx().clone());
+        remote::show(app, ui, true);
+        return;
+    }
     app.assistant.ctx = Some(ui.ctx().clone());
     ensure_loaded(app);
     if !app.assistant.enabled {
@@ -122,12 +180,21 @@ fn apply_actions(app: &mut SheetApp, actions: Vec<Action>) {
 
 fn ensure_loaded(app: &mut SheetApp) {
     #[cfg(not(target_arch = "wasm32"))]
+    if app.assistant.remote.enabled {
+        remote::ensure_loaded(app);
+        return;
+    }
+    #[cfg(not(target_arch = "wasm32"))]
     native::ensure_loaded(app);
     #[cfg(target_arch = "wasm32")]
     let _ = app;
 }
 
 fn action(app: &mut SheetApp, action: Action) -> Result<(), String> {
+    #[cfg(not(target_arch = "wasm32"))]
+    if app.assistant.remote.enabled {
+        return remote::action(app, action);
+    }
     #[cfg(not(target_arch = "wasm32"))]
     {
         native::action(app, action)
@@ -140,6 +207,11 @@ fn action(app: &mut SheetApp, action: Action) -> Result<(), String> {
 }
 
 pub(crate) fn poll(app: &mut SheetApp, ctx: &egui::Context) {
+    #[cfg(not(target_arch = "wasm32"))]
+    if app.assistant.remote.enabled {
+        remote::poll(app, ctx);
+        return;
+    }
     app.assistant.ctx = Some(ctx.clone());
     #[cfg(not(target_arch = "wasm32"))]
     native::poll(app, ctx);
@@ -149,3 +221,20 @@ pub(crate) fn poll(app: &mut SheetApp, ctx: &egui::Context) {
 
 #[cfg(all(test, not(target_arch = "wasm32")))]
 mod tests;
+
+#[cfg(all(test, not(target_arch = "wasm32")))]
+mod shared_component_commands {
+    use super::*;
+    #[test]
+    fn update_controls_require_activation_and_report_status_without_starting_a_helper() {
+        let mut app = SheetApp::new(gridcraft_engine::Session::new(), Default::default());
+        for id in ["ui.assistant.updateCheck", "ui.assistant.updateInstall", "ui.assistant.reloadComponent"] {
+            assert!(command(&mut app, id, &json!({})).unwrap().is_err());
+        }
+        app.enable_shared_assistant();
+        assert!(app.assistant.remote.enabled);
+        assert!(command(&mut app, "ui.assistant.updateStatus", &json!({})).unwrap().is_ok());
+        assert!(command(&mut app, "ui.assistant.updateStatus", &json!({"source":"untrusted"})).unwrap().is_err());
+        assert!(command(&mut app, "ui.assistant.updateCheck", &json!({})).unwrap().unwrap_err().contains("active app window"));
+    }
+}

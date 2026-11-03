@@ -36,6 +36,10 @@ pub(super) struct Guard {
 }
 
 impl Guard {
+    pub(super) fn target(&self) -> Target {
+        Target { id: self.document.unwrap_or(0).to_string(), revision: self.revision }
+    }
+
     pub(super) fn new(app: &SheetApp, _prompt: String, files: Vec<String>) -> Self {
         let doc = app.session.active();
         Self {

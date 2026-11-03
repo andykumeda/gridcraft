@@ -25,6 +25,15 @@ impl Default for Runtime {
 }
 
 impl SheetApp {
+    /// Uses only explicitly configured assistant-enabled releases; never falls back upstream.
+    /// Call when attaching the independently installed assistant bridge. An explicit update
+    /// opt-out remains in force.
+    #[cfg(not(target_arch = "wasm32"))]
+    pub fn configure_assistant_updates(&mut self, bridge_protocol: u32) {
+        let root = craft_ai_native::storage::SharedStore::default_root().map_err(|error| error.to_string());
+        self.updates_rt.updater = craft_update::custom::updater(&craft_update::suite::GRIDCRAFT, env!("CARGO_PKG_VERSION"), root, bridge_protocol);
+    }
+
     /// Separately packaged previews must not install standard releases over themselves.
     pub fn disable_updates(&mut self) {
         self.updates_rt.disabled = true;
@@ -69,6 +78,10 @@ pub(crate) fn tick(app: &mut SheetApp, ctx: &egui::Context) {
         Status::Idle | Status::Checking => None,
     };
     if let Some(message) = outcome {
+        let message = match rt.updater.repository() {
+            Some(repo) => format!("{message}\n{}", lang.tr("Update source: {repo}").replace("{repo}", repo)),
+            None => message,
+        };
         rt.updater.dismiss_status();
         app.message = Some(("GridCraft".into(), message));
     }
@@ -105,6 +118,7 @@ mod tests {
         start(&mut app, true);
         assert!(app.updates_rt.startup && app.updates_rt.manual);
         app.disable_updates();
+        app.configure_assistant_updates(1);
         assert!(!app.updates_rt.startup && !app.updates_rt.manual);
         start(&mut app, false);
         start(&mut app, true);

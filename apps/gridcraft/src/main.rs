@@ -329,6 +329,7 @@ fn main() -> eframe::Result<()> {
         session.new_workbook();
     }
     let mut app = SheetApp::new(session, services());
+    app.enable_shared_assistant();
     app.watch_desktop_theme();
     if disable_updates {
         app.disable_updates();

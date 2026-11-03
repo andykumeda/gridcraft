@@ -301,3 +301,5 @@ Ranked; estimates in Opus 5.5 agent-hours. Detail and the full beta-gate list in
 | 2026-10-07 | major | First estimates: catalog 89%, functions ~93%, depth ~65%, ~35 h to alpha, ~215 h to full parity |
 
 Private branch work: integrated [assistant preview](docs/assistant.md); [delivery ledger](docs/assistant-implementation.md) tracks implementation, verification, packaging and local installation independently. This does not change upstream Excel-parity assessments.
+
+- 2026-11-02 — A2: desktop adapter for an independently installed embedded assistant; shared global model/auth, app-owned guarded tools, explicit update/reload automation and customized source checks. Shared tests: 228 passed / 4 ignored. Consumer UI compilation passed; native linked/installed acceptance remains pending. See `docs/custom-assistant-updates.md`.
