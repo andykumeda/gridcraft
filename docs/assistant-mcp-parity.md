@@ -30,3 +30,8 @@ Workspace formatting and scoped all-target Clippy with `-D warnings` also passed
 The screenshot regression uses the real GUI
 and capture callback pipeline with synthetic pixels; it is not evidence of a live GPU capture
 or model inference. No personal workbook or proprietary asset is used.
+
+The v0.16 reconciliation at shared revision `3ff2754eeb1c079612247f4d288a22a20c169ac9`
+passed the full 323-test UI library suite (including the 34 assistant regressions) and all
+25 external MCP tests. See [the integration ledger](assistant-v016-integration.md) for the
+other checks and remaining installed/native acceptance limits.

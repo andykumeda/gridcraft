@@ -2,7 +2,6 @@
 //! offers the new release: Update and Restart (direct self-update), Download or Later. The flow
 //! itself is `craft_update::updater::Updater`.
 
-use craft_update::suite::GRIDCRAFT;
 use craft_update::updater::{Action, Status, Updater};
 
 use crate::SheetApp;
@@ -20,7 +19,7 @@ pub(crate) struct Runtime {
 
 impl Default for Runtime {
     fn default() -> Self {
-        Self { updater: Updater::new(&GRIDCRAFT, VERSION), disabled: false, startup: false, manual: false }
+        Self { updater: Updater::new(&crate::UPDATE_APP, VERSION), disabled: false, startup: false, manual: false }
     }
 }
 
@@ -31,7 +30,7 @@ impl SheetApp {
     #[cfg(not(target_arch = "wasm32"))]
     pub fn configure_assistant_updates(&mut self, bridge_protocol: u32) {
         let root = craft_ai_native::storage::SharedStore::default_root().map_err(|error| error.to_string());
-        self.updates_rt.updater = craft_update::custom::updater(&craft_update::suite::GRIDCRAFT, env!("CARGO_PKG_VERSION"), root, bridge_protocol);
+        self.updates_rt.updater = craft_update::custom::updater(&crate::UPDATE_APP, env!("CARGO_PKG_VERSION"), root, bridge_protocol);
     }
 
     /// Separately packaged previews must not install standard releases over themselves.

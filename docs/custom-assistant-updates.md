@@ -28,6 +28,12 @@ Add this app to `sources.json` in the shared assistant settings directory (macOS
 
 Replace the repository and team with the actual compatible release repository and its
 10-character Apple Developer team identifier. The bridge protocol must match this build.
+For explicitly approved local candidates, set `macos_team_id` to the schema placeholder
+`LOCALTEAM0` and add `local_certificate_sha1` with the exact 40-character signing-certificate
+fingerprint. This opts into strict local certificate verification; it does not enable notarization
+or accept arbitrary ad-hoc signatures. Leave that optional field absent for normal Apple-team
+verification.
+
 Configure the other apps as additional entries in the same file. Restart the app after editing
 source configuration. Missing, malformed, unavailable or incompatible sources report an error;
 they never select upstream or another publisher.
@@ -58,8 +64,8 @@ identity, version and signed bridge/source metadata before replacing anything. A
 manifest alone cannot establish compatibility or publisher identity.
 
 Updates retain the existing save-before-restart safeguard. No app update starts over unsaved
-work. App updates are macOS-only for this first delivery; no unsigned/ad-hoc package or other
-publisher is accepted. The assistant's own update remains independent of this flow.
+work. App updates are macOS-only for this first delivery; no unsigned/ad-hoc package or unconfigured
+publisher is accepted. Explicit local certificate mode is limited to its pinned identity. The assistant's own update remains independent of this flow.
 
 ## Delivery state
 
@@ -89,6 +95,9 @@ component never changes the app's release source or bypasses `--disable-updates`
 
 ## Verification and remaining checks
 
+The following initial implementation evidence is historical. Current v0.16 integration checks
+and delivery status are recorded in [the integration ledger](assistant-v016-integration.md).
+
 The production UI library passed its scoped Cargo check against the local shared component
 implementation. Shared updater regressions passed (175 tests, four environment/live tests
 ignored); the additional incompatible-DMG preservation test passed separately. Shared proxy
@@ -101,6 +110,6 @@ cross-app binary-unchanged update demonstrations remain unverified. The developm
 ran below 1 GiB free, so further app builds/test linking were stopped to preserve existing
 work. No published release or installed application was changed.
 
-Shared implementation pin: `andykumeda/craft-libs@17c5ea725866fa2e8f7f89a6cb3bec269ad8d571` (task branch `codex/independent-assistant`). All shared dependencies use that revision together. Cargo locks must resolve the published Git source, never the temporary local verification patch.
+Shared implementation pin: `andykumeda/craft-libs@3ff2754eeb1c079612247f4d288a22a20c169ac9` (task branch `codex/assistant-upstream`). All shared dependencies use that revision together. Cargo locks must resolve the published Git source, never the temporary local verification patch.
 
 The shared assistant/config/installer/updater final test run passed **228 tests, 4 ignored**. PDF production UI Clippy and Word/Grid production UI checks passed against byte-identical reviewed local source before publishing this pin. Native consumer test links were deferred for disk headroom; do not treat compilation as installed acceptance. No release or user configuration was changed.

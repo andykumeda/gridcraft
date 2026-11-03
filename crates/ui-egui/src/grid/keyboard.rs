@@ -1,13 +1,15 @@
 use super::geo::Geo;
-use super::interact::delete_selected_object;
 use super::menus::is_checkbox;
 use super::{CellRef, Drag, Sheet, SheetApp, json};
 
 /// Grid keyboard handling when no text field has focus.
 pub(super) fn keyboard(app: &mut SheetApp, ctx: &egui::Context, resp: &egui::Response, geo: &Geo, sh: &Sheet) {
-    if crate::assistant::owns_keyboard(app) {
-        return;
+    if !crate::assistant::owns_keyboard(app) {
+        handle_keys(app, ctx, resp, geo, sh);
     }
+}
+
+fn handle_keys(app: &mut SheetApp, ctx: &egui::Context, resp: &egui::Response, geo: &Geo, sh: &Sheet) {
     // Focus left on an editor that no longer exists goes back to the grid.
     let stale = [egui::Id::unique("gridcraft.cell_editor"), egui::Id::unique("gridcraft.formula_bar"), crate::text_box::editor_id()];
     let editing = app.editor.is_some() || app.text_box_editor.is_some();
@@ -127,9 +129,10 @@ pub(super) fn keyboard(app: &mut SheetApp, ctx: &egui::Context, resp: &egui::Res
                     }
                     Key::Tab => app.move_after_enter(0, if shift { -1 } else { 1 }),
                     Key::F2 => app.begin_edit(None, false),
-                    Key::Delete if delete_selected_object(app, sh) => {}
+                    // With an object selected, Delete and Backspace delete it, not the cells.
+                    Key::Delete if app.delete_selected_object() => {}
                     Key::Delete => app.run_or_alert("edit.clearContents", json!({})),
-                    Key::Backspace if delete_selected_object(app, sh) => {}
+                    Key::Backspace if app.delete_selected_object() => {}
                     Key::Backspace => {
                         // Excel for Mac: Delete clears the cell and starts editing it.
                         app.run_or_alert("edit.clearContents", json!({}));
@@ -137,6 +140,7 @@ pub(super) fn keyboard(app: &mut SheetApp, ctx: &egui::Context, resp: &egui::Res
                             app.begin_edit(Some(String::new()), false);
                         }
                     }
+                    Key::Escape if app.selected_object.is_some() => app.selected_object = None,
                     Key::Escape => {
                         app.session.clipboard = None;
                         app.session.format_painter = None;
