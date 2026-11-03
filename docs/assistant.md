@@ -1,5 +1,12 @@
 # Integrated assistant preview
 
+Current compact-panel source (2026-11-03): the header uses a Chats menu and a settings gear;
+the rounded composer holds the file `+` menu, model picker and Send/Stop. Quick model choices
+retain validated streaming/tool support and use an app override. Version and helper update
+controls appear in settings after the host and helper are updated. Older helper versions keep
+the recovery toolbar. See [the current integration ledger](assistant-v016-integration.md) for
+source, candidate and installation state; the preview history below is retained as historical evidence.
+
 For current source builds, the independently installed assistant now uses the complete external
 [MCP tool catalog and application dispatcher](assistant-mcp-parity.md). The restrictions described
 below document the older installed preview; they do not describe the updated sidebar adapter.

@@ -328,3 +328,5 @@ Ranked; estimates in Opus 5.5 agent-hours. Detail and the full beta-gate list in
 Private branch work: integrated [assistant preview](docs/assistant.md); [delivery ledger](docs/assistant-implementation.md) tracks implementation, verification, packaging and local installation independently. This does not change upstream Excel-parity assessments.
 
 - 2026-11-02 — A2: desktop adapter for an independently installed embedded assistant; shared global model/auth, app-owned guarded tools, explicit update/reload automation and customized source checks. Shared tests: 228 passed / 4 ignored. Consumer UI compilation passed; native linked/installed acceptance remains pending. See `docs/custom-assistant-updates.md`.
+
+- 2026-11-03 — Compact shared assistant panel integration: one locked craft-libs revision `83e61084` supplies helper0.1.1 and settings-only update controls. Verification and signed candidate preparation are tracked in [the assistant integration ledger](docs/assistant-v016-integration.md); installed-app acceptance remains a separate rollout step. Readiness estimates unchanged.

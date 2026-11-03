@@ -56,7 +56,11 @@ fn toolbar_and_view_controls_open_and_close_the_native_panel() {
     controls[0].click();
     h.run_steps(3);
     assert!(h.state().assistant.open);
+    h.get_by_label("Chats").click();
+    h.run_steps(3);
     assert!(h.query_by_label("New chat").is_some());
+    h.get_by_label("Chats").click();
+    h.run_steps(3);
     h.get_by_label("Close").click();
     h.run_steps(3);
     assert!(!h.state().assistant.open);

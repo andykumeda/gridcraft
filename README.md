@@ -352,6 +352,11 @@ The integrated [assistant preview](docs/assistant.md) adds a native workbook ass
 
 The desktop entry point uses a separately installed shared assistant for its embedded sidebar. Model/provider defaults and authentication are shared across PDFCraft, WordCraft and GridCraft; chats and document permissions remain separate. Initial app builds must include the bridge. Compatible assistant releases then update once for all three apps without rebuilding their binaries.
 
+The current source follows a compact chat layout: settings gear, file `+` menu, model picker and
+rounded composer. Helper updates appear in settings after both app and helper are updated;
+older helper versions retain their recovery toolbar. Candidate and installed status are tracked
+separately in the [integration ledger](docs/assistant-v016-integration.md).
+
 The sidebar uses the same complete MCP tool catalog and live application dispatcher as external agents, including command execution, windows, workbook creation/open/save, and screenshots. See [assistant MCP parity](docs/assistant-mcp-parity.md) for the behavior and verification boundary.
 
 See [custom assistant and app updates](docs/custom-assistant-updates.md) for configuration, approved updates and compatibility safeguards. Installed synthetic smoke and local signing are recorded in the [candidate ledger](docs/assistant-candidates.md). Native composition/clipboard/VoiceOver and independent update activation remain pending; the latest candidate includes the active-assistant app-restart safeguard.

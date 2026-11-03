@@ -121,3 +121,5 @@ to check our files, and Windows machines with the reported GPU drivers.
 | 2026-10-10 | major | Created: current focus, beta gates (~160–240 h), milestones moved from ROADMAP.md, post-beta ranking |
 
 Private assistant preview: [behavior](assistant.md) and [implementation/delivery ledger](assistant-implementation.md). Assistant integration does not change the existing Excel-parity assessment.
+
+- 2026-11-03 — Compact shared assistant panel integration: one locked craft-libs revision `83e61084` supplies helper0.1.1 and settings-only update controls. Verification and signed candidate preparation are tracked in [the assistant integration ledger](assistant-v016-integration.md); installed-app acceptance remains a separate rollout step. Readiness estimates unchanged.

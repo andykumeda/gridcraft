@@ -58,3 +58,26 @@ Its full UI suite passed 326 tests; scoped all-target Clippy and WASM checks pas
 Corrected signed candidates and repeated installed smoke passed on both Macs; see the candidate
 ledger for exact hashes, process/socket cleanup and verification limits. No deployment changes
 are made by this correction/verification workstream.
+
+## Compact assistant panel follow-up — 2026-11-03
+
+| Workstream | Owner | State | Acceptance and verification | Release |
+| --- | --- | --- | --- | --- |
+| Shared revision integration | Grid workstream | Verified | Locked shared revision `83e61084`: UI326, MCP25, strict all-target lint, assets26, layers17, WASM, format and diff checks passed | Not installed |
+| Signed desktop candidates | Grid workstream | In progress | Required pinned-font optimized desktop build; strict local-certificate signatures, source stamp and archive checks for standard and Preview | Installation owned by rollout coordinator |
+
+The helper owns chat presentation: a settings gear, Chats menu, compact file/model composer
+controls and rounded message/composer styling. The app rebuild moves helper version and update
+controls into settings, while retaining the update toolbar for an older helper that cannot
+report its settings view. Provider selection, credentials, workbook state and chat storage
+are not migrated by this source update. Existing Preview profile isolation and update opt-out
+remain in place. Installed-app checks on each Mac are separate from candidate preparation.
+
+Source validation used the locked Git dependency, not a path override. The original full UI
+run passed325 tests and failed only the old assertion that New chat was always visible. The
+updated test opens Chats, verifies New chat is reachable, closes the menu and closes the panel;
+the full rerun passed326/326. MCP passed25/25. Scoped UI/desktop/CLI all-target Clippy passed
+with warnings denied. WASM passed with the existing `backstage::Modified` dead-code warning.
+No full-workspace CI, installed GUI, provider inference or signed update activation is claimed
+by this candidate-preparation workstream. The previously verified signed CLI is retained; this
+change does not change its engine/tool implementation.
