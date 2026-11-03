@@ -57,7 +57,7 @@ update demonstration.
 
 ## App-update restart guard correction
 
-Status: source verified; corrected release candidate build pending. The initial app updater checked only dirty workbooks;
+Status: source and corrected candidates verified; corrected installed smoke passed on both Macs. The initial app updater checked only dirty workbooks;
 a clean workbook could permit restart while assistant work was active. The corrected guard also
 checks native job/turn/dispatch state, remote turn/dispatch state and shared
 `Controller::restart_safe()` from revision `986cb16234cfdac1ee1337fb4cdf00945cad4e5a`.
@@ -71,4 +71,46 @@ and Preview update opt-out safeguards remain in force. Focused regressions cover
 with active chat/settings UI, native turns/dispatch/jobs, remote dispatch and stale widget flags.
 The full UI library suite passed 326 tests; all-target Clippy for UI/desktop/CLI and the WASM
 check passed (only the existing upstream dead-code warning). Formatting/diff checks passed.
-Corrected signed candidates will be recorded after the verified source commit/build.
+Corrected candidates and installed follow-up are recorded below.
+
+## Corrected candidates and repeated installed smoke
+
+Source `40305767ad5fcff58c6e7c12c77d0f3a1fe1c646` is committed/pushed on the same task branch.
+The required-font optimized desktop/CLI build passed (7m21s); candidate root is
+`/private/tmp/gridcraft-local-candidates-40305767`. `receipt.json` records complete metadata,
+checksums and packaging procedure. Both standard/Preview signatures and ZIP-extracted app/CLI
+copies passed strict verification. Version, architecture, minimum OS, identifiers, signed source
+repository/protocol, Preview profile and update opt-out are unchanged. The CLI code is unchanged,
+so the exact previously verified signed 0.16.0 bytes were retained.
+
+| Candidate | Signed executable SHA-256 |
+|---|---|
+| Standard | `75e2feff3c87f9fa1f35b599c1048507c804cab134ff2b1f988547b2581744b4` |
+| Preview native | `03ef3a5cb060f737b6e3869dc530d8e41fd47a510ad2bc7e7ffc5a401387a703` |
+| CLI | `58c4cd2d282f2079fc1a1d8ae49be805019245c4968aca7804187c9730893ead` |
+
+| Archive | SHA-256 |
+|---|---|
+| `gridcraft-0.16.0-40305767-macos-aarch64-local.zip` | `3e1bc60aa349348ec3f3f9187dbad715ecc4b5cdcddf48ad381e441e1f9d5cc3` |
+| `gridcraft-assistant-preview-0.16.0-40305767-macos-aarch64-local.zip` | `f54a58598873d809bc1080f4e9495bf58e423a9763db96290146859e62a80ddc` |
+| `gridcraft-cli-0.16.0-40305767-macos-aarch64-local.zip` | `96dffd3fad0cd5b447660845d9bf80f4d89c85b6cbafaff55cdafaade8d25d9b` |
+
+The deployment owner replaced the initial standard app on both Macs and Mini Preview, retaining
+backups. Independent repeated smoke asserted the exact installed source stamp and standard
+executable hash above before launch:
+
+| Host | Evidence root | Owned app / ephemeral loopback |
+|---|---|---|
+| Mini | `/private/tmp/gridcraft-installed-smoke-trwtphl0` | PID 78273 / 50081 |
+| MacBook | `/private/tmp/gridcraft-installed-smoke-jzjpdtnf` | PID 45349 / 52508 |
+
+Both passed: actual installed helper 0.1.0 connected/rendered; screenshots captured and visually
+inspected; external MCP listed 22 tools and read exactly `[[2,5],[3,null]]`; native control reads
+confirmed no changes. Each app quit normally, its helper child exited, and its listener was
+verified released. The same temporary-profile/public-config-only isolation applied; no inference,
+personal settings/documents or deployment edits were performed by this verification workstream.
+Mini Preview additionally passed installed signature/source/hash, bundle identity and unchanged
+profile/update-disabled launcher checks; its GUI was not separately exercised. Signature trust
+verification used normal keychain access; the sandbox cannot evaluate this local certificate.
+Earlier live-update, input-composition/clipboard/VoiceOver and independent-upgrade demonstration
+limits still apply.

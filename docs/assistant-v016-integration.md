@@ -1,14 +1,16 @@
 # GridCraft v0.16 assistant integration
 
-Status: Verified source integration; candidate packaging in progress. This isolated task branch reconciles the assistant-enabled source with
-upstream `85e51e00` (GridCraft 0.16.0). No installed app, release or user configuration is changed.
+Status: Verified source, signed candidates and installed helper/read-only MCP smoke on both Macs.
+This isolated task branch reconciles the assistant-enabled source with upstream `85e51e00`
+(GridCraft 0.16.0). Installation is managed separately; current installed verification is in
+the candidate ledger.
 
 | Workstream | State | Acceptance and verification |
 |---|---|---|
 | Upstream merge | Verified | Preserve v0.16 engine, GUI, file-format and control-channel changes alongside the shared assistant. |
 | Shared update contract | Verified | Use one assistant-enabled shared revision with v0.16 update branding; retain the configured fork source, opt-out and unsaved-work guards. |
 | MCP parity | Verified | Run complete catalog equality, formerly blocked tools, asynchronous screenshot, cancellation and reentrant assistant regressions against the merged source. |
-| Delivery | In progress | Commit verified source integration. Public releases and installed-app replacement remain separate steps. |
+| Delivery | Verified | Commit verified source integration. Public releases and installed-app replacement remain separate steps. |
 
 The updater merge retains v0.16's branded `UPDATE_APP` for update offers. The existing custom
 result modal retains the effective configured release source instead of linking to upstream
@@ -23,7 +25,7 @@ The assistant's full MCP catalog and raw result envelopes continue through `grid
 and the same live GUI dispatcher as external MCP. Upstream's control-channel changes are retained;
 no assistant-only document, range, command or filesystem filter is introduced.
 
-Verified on the final shared pin:
+Original reconciliation verification on shared revision `3ff2754e`:
 
 - `cargo test -p gridcraft-ui-egui --lib`: 323 passed, including all assistant, control and updater regressions.
 - `cargo test -p gridcraft-mcp`: 25 passed, using isolated temporary token files and ephemeral loopback sockets.
@@ -37,12 +39,13 @@ ownership without exceeding the upstream keyboard handler complexity limit and q
 native-menu regression's `super::tree()` after upstream removed its import.
 
 Workspace formatting and diff checks passed after final changes. All shared dependencies and the actual Git
-lock now use `andykumeda/craft-libs@3ff2754eeb1c079612247f4d288a22a20c169ac9`; no local
-path override is used. Native input/accessibility, real provider inference, installed updates and the three-app unchanged-binary demonstration remain unverified.
+lock now use `andykumeda/craft-libs@986cb16234cfdac1ee1337fb4cdf00945cad4e5a`; no local
+path override is used. Native composition/clipboard/VoiceOver, real provider inference, approved
+in-app update activation and the three-app unchanged-binary demonstration remain unverified.
 
-Signed local standard/Preview bundles and a matching release CLI are the next delivery step;
-artifact receipts will record their source commit, identities and checksums. No installed app,
-CLI wrapper or user settings have been changed.
+Signed local standard/Preview bundles and a matching release CLI are prepared; artifact receipts
+record source commits, identities and checksums. The deployment owner handles installation;
+this verification workstream does not modify installed apps, wrappers or personal settings.
 
 ## Installed follow-up and restart safety
 
@@ -50,6 +53,8 @@ The initial signed candidate and independent installed smoke on both Macs are re
 [the candidate ledger](assistant-candidates.md). Actual helper rendering and read-only MCP passed.
 A subsequent review found that app updates needed an additional active-assistant restart guard.
 The verified correction uses shared revision
-`986cb16234cfdac1ee1337fb4cdf00945cad4e5a`; the initially installed candidate needs replacement.
+`986cb16234cfdac1ee1337fb4cdf00945cad4e5a`; the initial candidate was superseded by source `40305767`.
 Its full UI suite passed 326 tests; scoped all-target Clippy and WASM checks passed.
-No deployment changes are made by this correction workstream.
+Corrected signed candidates and repeated installed smoke passed on both Macs; see the candidate
+ledger for exact hashes, process/socket cleanup and verification limits. No deployment changes
+are made by this correction/verification workstream.
