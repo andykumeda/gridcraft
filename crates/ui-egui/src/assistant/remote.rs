@@ -1,4 +1,4 @@
-//! The app retains its guarded tool host; assistant UI and providers run in the shared helper.
+//! Assistant tool calls use the same MCP server and live control dispatcher as external agents.
 use std::collections::BTreeMap;
 use std::sync::mpsc;
 use std::time::Duration;
@@ -20,6 +20,8 @@ pub(super) struct Remote {
     controller: Option<Controller>,
     turn: Option<Turn>,
     pub config: Option<RuntimeConfig>,
+    dispatching: bool,
+    stop_requested: bool,
     label: String,
     settings: Option<bool>,
     shown: bool,
@@ -59,7 +61,7 @@ pub(super) fn ensure_loaded(app: &mut SheetApp) {
 
 pub(super) fn show(app: &mut SheetApp, ui: &mut egui::Ui, settings: bool) {
     ensure_loaded(app);
-    ui.small(app.ui.language.tr("Uses the active workbook. Assistant file access is unavailable."));
+    ui.small(app.ui.language.tr("Can open, save, and control GridCraft workbooks and windows."));
     app.assistant.remote.shown = true;
     let label = app.session.active().map(|doc| doc.display_title()).unwrap_or_else(|| app.ui.language.tr("No workbook").into());
     let language = app.ui.language.code();
@@ -113,7 +115,7 @@ pub(super) fn action(app: &mut SheetApp, action: Action) -> Result<(), String> {
 }
 
 fn begin(app: &mut SheetApp, prompt: String, files: Vec<String>) -> Result<(), String> {
-    if app.assistant.remote.turn.is_some() {
+    if app.assistant.remote.turn.is_some() || app.assistant.remote.dispatching {
         return Err("Finish or stop the current assistant turn first.".into());
     }
     if let Some(controller) = &mut app.assistant.remote.controller {
@@ -122,17 +124,11 @@ fn begin(app: &mut SheetApp, prompt: String, files: Vec<String>) -> Result<(), S
     if prompt.trim().is_empty() || files.len() > 32 {
         return Err("Give a nonempty prompt and at most 32 exact file paths.".into());
     }
-    if !files.is_empty() {
-        return Err("Assistant file access is unavailable in GridCraft.".into());
-    }
-    app.settle_drafts()?;
     let wake = app.assistant.ctx.clone().ok_or("The assistant needs an active app window")?;
     let guard = Guard::new(app, prompt.clone(), files.clone());
     let target = guard.target();
     let proxy = Proxy::spawn(target.clone(), wake.clone(), |sender, cancel, wake, config| {
-        let mut host = McpHost::new(sender, cancel, wake, Duration::from_secs(config.request_timeout_secs));
-        host.set_limits(config);
-        host
+        McpHost::new(sender, cancel, wake, Duration::from_secs(config.request_timeout_secs))
     })?;
     app.assistant.widget.busy = true;
     app.assistant.widget.error = None;
@@ -144,6 +140,9 @@ fn begin(app: &mut SheetApp, prompt: String, files: Vec<String>) -> Result<(), S
 }
 
 fn stop(app: &mut SheetApp) -> Result<(), String> {
+    if app.assistant.remote.dispatching {
+        app.assistant.remote.stop_requested = true;
+    }
     app.assistant.remote.cancel();
     app.assistant.remote.turn = None;
     app.assistant.widget.busy = false;
@@ -214,15 +213,21 @@ pub(super) fn poll(app: &mut SheetApp, ctx: &egui::Context) {
         }
     }
     if let Some(mut turn) = app.assistant.remote.turn.take() {
+        app.assistant.remote.dispatching = true;
         while let Ok(pending) = turn.proxy.pending.try_recv() {
             host::dispatch(app, ctx, &mut turn.guard, pending);
+            if app.assistant.remote.stop_requested {
+                turn.proxy.cancel();
+                break;
+            }
         }
+        app.assistant.remote.dispatching = false;
+        let stopped = std::mem::take(&mut app.assistant.remote.stop_requested);
         let mut failed = None;
         loop {
             match turn.proxy.events.try_recv() {
                 Ok(Event::Catalog { config, tools, initial_read }) => {
                     turn.proxy.set_limits(&config);
-                    turn.guard.set_limits(&config);
                     app.assistant.remote.config = Some(config);
                     turn.catalog =
                         Some(StartTurn { prompt: turn.prompt.clone(), target: turn.target.clone(), tools, files: turn.files.clone(), initial_read });
@@ -270,7 +275,9 @@ pub(super) fn poll(app: &mut SheetApp, ctx: &egui::Context) {
                 })
             })
             .map(str::to_owned);
-        if let Some(error) = failed.or(controller_error) {
+        if stopped {
+            turn.proxy.cancel();
+        } else if let Some(error) = failed.or(controller_error) {
             turn.proxy.cancel();
             app.assistant.widget.error = Some(error);
             if let Some(controller) = &mut app.assistant.remote.controller {
@@ -293,13 +300,17 @@ pub(super) fn poll(app: &mut SheetApp, ctx: &egui::Context) {
             app.assistant.widget.error = Some(error.into());
         }
     }
-    if app.assistant.remote.turn.is_some() {
+    if app.assistant.remote.turn.is_some() || app.assistant.remote.dispatching {
         ctx.request_repaint_after(Duration::from_millis(50));
     }
 }
 
-fn choose_files(_app: &mut SheetApp) -> Result<(), String> {
-    Err("Assistant file access is unavailable; use GridCraft's Open and Save controls.".into())
+fn choose_files(app: &mut SheetApp) -> Result<(), String> {
+    let pick = app.services.pick_open.as_ref().ok_or("The file chooser is unavailable; enter an exact file path in the assistant.")?;
+    if let Some(path) = pick() {
+        app.assistant.remote.controller.as_mut().ok_or("The shared assistant is not ready")?.command("add_file", json!(path))?;
+    }
+    Ok(())
 }
 
 pub(super) fn update_status(app: &SheetApp) -> serde_json::Value {
@@ -315,7 +326,7 @@ pub(super) fn service_command(app: &mut SheetApp, name: &str) -> Result<serde_js
         return Ok(update_status(app));
     }
     let ctx = app.assistant.ctx.clone().ok_or("The assistant needs an active app window")?;
-    if name == "ui.assistant.reloadComponent" && app.assistant.remote.turn.is_some() {
+    if name == "ui.assistant.reloadComponent" && (app.assistant.remote.turn.is_some() || app.assistant.remote.dispatching) {
         return Err("Finish or stop the current assistant turn before reloading its component.".into());
     }
     let controller = app.assistant.remote.controller.as_mut().ok_or("The shared assistant is unavailable")?;
@@ -345,5 +356,33 @@ mod tests {
         assert!(app.assistant.widget.authorized_files.is_empty());
         assert!(!app.assistant.remote.controller.as_ref().unwrap().ready());
         assert!(!app.assistant.remote.owns_keyboard());
+    }
+    #[test]
+    fn nested_begin_and_reload_are_rejected_while_turn_is_taken_for_gui_dispatch() {
+        let mut app = SheetApp::new(gridcraft_engine::Session::new(), Default::default());
+        app.assistant.remote.enabled = true;
+        app.assistant.remote.dispatching = true;
+        let error = begin(&mut app, "Nested request".into(), vec![]).unwrap_err();
+        assert!(error.contains("Finish or stop"), "{error}");
+        assert!(app.assistant.remote.turn.is_none());
+        assert!(app.assistant.remote.controller.is_none(), "rejected nested requests must not start a helper");
+        app.assistant.ctx = Some(egui::Context::default());
+        let error = service_command(&mut app, "ui.assistant.reloadComponent").unwrap_err();
+        assert!(error.contains("Finish or stop"), "{error}");
+        assert!(!app.assistant.remote.controller.as_ref().unwrap().ready());
+    }
+
+    #[test]
+    fn self_stop_during_gui_dispatch_sets_deferred_cancellation_without_starting_a_turn() {
+        let mut app = SheetApp::new(gridcraft_engine::Session::new(), Default::default());
+        app.assistant.remote.dispatching = true;
+        app.assistant.widget.busy = true;
+        assert!(!app.assistant.remote.stop_requested);
+        stop(&mut app).unwrap();
+        // The taken turn is owned by poll; it consumes this flag to cancel instead of reinserting it.
+        assert!(app.assistant.remote.stop_requested);
+        assert!(app.assistant.remote.turn.is_none());
+        assert!(!app.assistant.widget.busy);
+        assert!(app.assistant.remote.controller.is_none());
     }
 }

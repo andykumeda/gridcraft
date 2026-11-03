@@ -1,5 +1,10 @@
 # Integrated assistant preview
 
+For current source builds, the independently installed assistant now uses the complete external
+[MCP tool catalog and application dispatcher](assistant-mcp-parity.md). The restrictions described
+below document the older installed preview; they do not describe the updated sidebar adapter.
+The new adapter has not been released or deployed.
+
 Updated 2026-10-29 (America/Los_Angeles). Preview **0.13.0 (`00cb4830`)** is installed at
 `/Applications/GridCraft Assistant Preview.app`. Full CI and installed Codex (Terra) and Ollama edit/read-back/Undo
 plus save/reopen checks passed. Implementation and delivery evidence:

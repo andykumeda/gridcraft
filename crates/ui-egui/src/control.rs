@@ -428,22 +428,25 @@ pub fn handle(app: &mut SheetApp, ctx: &egui::Context, method: &str, p: &Json) -
 pub fn poll(app: &mut SheetApp, ctx: &egui::Context) {
     let Some(rx) = app.control_rx.take() else { return };
     while let Ok(req) = rx.try_recv() {
-        // A request whose sender stopped waiting is dropped unrun: running it would apply a
-        // command the client was told had failed, and its reply would go nowhere (#1914).
-        if !req.take() {
-            continue;
-        }
-        let outcome = handle(app, ctx, &req.method, &req.params);
-        match outcome {
-            Outcome::Done(v) => {
-                let _ = req.reply.send(v);
-            }
-            Outcome::Screenshot { path } => admit(app, ctx, path, req.reply),
-        }
+        dispatch(app, ctx, req);
     }
     app.control_rx = Some(rx);
     if !app.synthetic.is_empty() {
         ctx.request_repaint();
+    }
+}
+
+/// Dispatch one already-authorized transport request, sharing screenshot admission and abandonment.
+pub(crate) fn dispatch(app: &mut SheetApp, ctx: &egui::Context, req: ControlRequest) {
+    // A timed-out request must not be applied later or replayed (#1914).
+    if !req.take() {
+        return;
+    }
+    match handle(app, ctx, &req.method, &req.params) {
+        Outcome::Done(value) => {
+            let _ = req.reply.send(value);
+        }
+        Outcome::Screenshot { path } => admit(app, ctx, path, req.reply),
     }
 }
 

@@ -27,6 +27,16 @@ fn assistant_commands_are_discoverable_and_status_does_not_include_transcripts()
     assert!(!status.to_string().contains("synthetic private workbook text"));
     assert!(command(&mut app, "ui.assistant.send", &json!({"text":"  "})).unwrap().is_err());
     assert!(command(&mut app, "ui.assistant.send", &json!({"text":"read workbook","files":["/tmp/synthetic"]})).unwrap().is_err());
+    assert_eq!(app.assistant.widget.authorized_files, ["/tmp/synthetic"], "valid files are retained even while settings are unavailable");
+}
+
+#[test]
+fn refused_busy_send_preserves_existing_request_files() {
+    let mut app = app();
+    app.assistant.widget.authorized_files = vec!["/tmp/existing-context.xlsx".into()];
+    app.assistant.widget.busy = true;
+    assert!(command(&mut app, "ui.assistant.send", &json!({"text":"another task","files":["/tmp/replacement.xlsx"]})).unwrap().is_err());
+    assert_eq!(app.assistant.widget.authorized_files, ["/tmp/existing-context.xlsx"]);
 }
 
 #[test]

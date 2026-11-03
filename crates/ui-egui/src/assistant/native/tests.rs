@@ -460,6 +460,7 @@ fn selected_codex_and_ollama_routes_reach_the_provider_without_fallback() {
                 name: "inspect_workbook".into(),
                 description: "Synthetic read tool; general chat must not call it".into(),
                 input_schema: json!({"type":"object","properties":{}}),
+                mcp_metadata: Default::default(),
             }])
         }
         fn call(&mut self, _: &Target, _: &craft_ai_core::assistant::ToolCall, _: &Cancellation) -> Result<Value, AiError> {
@@ -510,16 +511,28 @@ fn selected_codex_and_ollama_routes_reach_the_provider_without_fallback() {
 }
 
 #[test]
-fn unavailable_file_grants_are_rejected_without_starting_jobs_or_accessing_paths() {
+fn request_files_are_context_without_creating_a_tool_allowlist_or_jobs() {
     let mut app = app();
     enable_without_profile(&mut app);
-    for request in
-        [Action::ChooseFiles, Action::AddFile("/tmp/synthetic-never-opened".into()), Action::RemoveFile("/tmp/synthetic-never-opened".into())]
-    {
-        let error = action(&mut app, request).unwrap_err();
-        assert!(error.contains("file access is unavailable"));
-        assert!(app.assistant.widget.authorized_files.is_empty());
-        assert!(app.assistant.native.job.is_none());
-        assert!(app.assistant.native.turn.is_none());
-    }
+    action(&mut app, Action::AddFile("/tmp/synthetic-request-file.xlsx".into())).unwrap();
+    assert_eq!(app.assistant.widget.authorized_files, ["/tmp/synthetic-request-file.xlsx"]);
+    assert!(action(&mut app, Action::AddFile("relative.xlsx".into())).is_err());
+    assert_eq!(app.assistant.widget.authorized_files.len(), 1);
+    app.services.pick_open = Some(Box::new(|| Some("/tmp/synthetic-picked-file.xlsx".into())));
+    action(&mut app, Action::ChooseFiles).unwrap();
+    assert_eq!(app.assistant.widget.authorized_files.len(), 2);
+    action(&mut app, Action::RemoveFile("/tmp/synthetic-request-file.xlsx".into())).unwrap();
+    assert_eq!(app.assistant.widget.authorized_files, ["/tmp/synthetic-picked-file.xlsx"]);
+    assert!(app.assistant.native.job.is_none());
+    assert!(app.assistant.native.turn.is_none());
+}
+
+#[test]
+fn self_stop_cancels_the_turn_while_its_gui_request_is_dispatched() {
+    let mut app = app();
+    enable_without_profile(&mut app);
+    let cancel = Cancellation::default();
+    app.assistant.native.dispatch_cancel = Some(cancel.clone());
+    action(&mut app, Action::Stop).unwrap();
+    assert!(cancel.is_cancelled());
 }

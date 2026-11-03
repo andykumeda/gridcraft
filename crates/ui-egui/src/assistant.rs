@@ -77,7 +77,7 @@ pub(crate) fn owns_keyboard(app: &SheetApp) -> bool {
 pub fn commands() -> Vec<Value> {
     vec![
         json!({"id":"ui.assistant","label":"Assistant","location":"View › Assistant","params":"value?: bool","enabled":true}),
-        json!({"id":"ui.assistant.send","label":"Send assistant prompt","location":"Agents","params":"text: string","enabled":cfg!(not(target_arch="wasm32"))}),
+        json!({"id":"ui.assistant.send","label":"Send assistant prompt","location":"Agents","params":"text: string; files?: array of exact paths","enabled":cfg!(not(target_arch="wasm32"))}),
         json!({"id":"ui.assistant.newChat","label":"New assistant chat","location":"Agents","params":"{}","enabled":cfg!(not(target_arch="wasm32"))}),
         json!({"id":"ui.assistant.stop","label":"Stop assistant","location":"Agents","params":"{}","enabled":true}),
         json!({"id":"ui.assistant.status","label":"Assistant status","location":"Agents","params":"{}","enabled":true}),
@@ -111,8 +111,19 @@ pub(crate) fn command(app: &mut SheetApp, id: &str, params: &Value) -> Option<Re
             let Some(text) = params.get("text").and_then(Value::as_str).filter(|s| !s.trim().is_empty()) else {
                 return Some(Err("give a nonempty text prompt".into()));
             };
-            if params.get("files").is_some() {
-                return Some(Err("Assistant file access is unavailable in this preview".into()));
+            if app.assistant.widget.busy {
+                return Some(Err("finish or stop the current assistant turn first".into()));
+            }
+            if let Some(files) = params.get("files") {
+                let Some(files) = files.as_array().filter(|files| files.len() <= 32) else {
+                    return Some(Err("files must contain at most 32 exact file paths".into()));
+                };
+                let Some(files) = files.iter().map(|file| file.as_str().map(str::to_owned)).collect::<Option<Vec<_>>>() else {
+                    return Some(Err("file paths must be strings".into()));
+                };
+                if let Err(error) = set_files(app, files) {
+                    return Some(Err(error));
+                }
             }
             app.assistant.open = true;
             action(app, Action::Send(text.into())).map(|()| json!({"started":true}))
@@ -136,7 +147,7 @@ pub fn pane(app: &mut SheetApp, ui: &mut egui::Ui) {
     }
     app.assistant.ctx = Some(ui.ctx().clone());
     ensure_loaded(app);
-    ui.small("Uses the active workbook. Assistant file access is unavailable.");
+    ui.small("Can open, save, and control GridCraft workbooks and windows.");
     if app.assistant.widget.settings_open {
         ui.small(&app.assistant.effective);
     }
@@ -167,6 +178,21 @@ pub fn settings(app: &mut SheetApp, ui: &mut egui::Ui) {
     ui.small(&app.assistant.effective);
     let actions = craft_ui::assistant::settings(ui, id, &mut app.assistant.widget.settings, |text| language.tr(text).into());
     apply_actions(app, actions);
+}
+
+fn set_files(app: &mut SheetApp, files: Vec<String>) -> Result<(), String> {
+    if files.len() > 32 {
+        return Err("give at most 32 exact file paths".into());
+    }
+    if files.iter().any(|file| !std::path::Path::new(file).is_absolute()) {
+        return Err("use absolute file paths".into());
+    }
+    #[cfg(not(target_arch = "wasm32"))]
+    if files.iter().any(|file| std::path::Path::new(file).is_dir()) {
+        return Err("choose individual files, not folders".into());
+    }
+    app.assistant.widget.authorized_files = files;
+    Ok(())
 }
 
 fn apply_actions(app: &mut SheetApp, actions: Vec<Action>) {
