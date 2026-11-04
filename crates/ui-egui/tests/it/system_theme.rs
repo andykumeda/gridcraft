@@ -192,3 +192,30 @@ fn title_bar_switch_and_file_menu_choose_the_theme() {
     system_theme(&mut h, Some(Theme::Dark));
     assert_appearance(&h, true);
 }
+
+#[test]
+fn view_assistant_stays_at_the_right_edge_and_toggles_in_both_themes() {
+    for width in [640.0, 1200.0] {
+        for dark in [false, true] {
+            let mut session = Session::new();
+            session.new_workbook();
+            let mut app = crate::common::app(session);
+            app.ui.ribbon_tab = "View".into();
+            app.ui.dark = dark;
+            app.ui.system_theme = false;
+            let mut h = crate::common::harness_with(crate::common::builder().with_size(egui::vec2(width, 800.0)), app, 4);
+            let button = h.get_all_by_role_and_label(egui::Role::Button, "Assistant").find(|b| b.rect().top() > 50.0).expect("View Assistant");
+            let rect = button.rect();
+            assert!(rect.right() <= width && rect.right() > width - 40.0, "{width}: {rect:?}");
+            assert!(rect.left() > h.get_by_role_and_label(egui::Role::Button, "Normal").rect().right());
+            button.click();
+            h.run_steps(2);
+            assert_eq!(h.state_mut().run("ui.assistant.status", json!({})).unwrap()["open"], true);
+            h.get_all_by_role_and_label(egui::Role::Button, "Assistant").find(|b| b.rect().top() > 50.0).unwrap().focus();
+            h.run_steps(2);
+            h.key_press(egui::Key::Enter);
+            h.run_steps(2);
+            assert_eq!(h.state_mut().run("ui.assistant.status", json!({})).unwrap()["open"], false, "keyboard activation closes the panel");
+        }
+    }
+}

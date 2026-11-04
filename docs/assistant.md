@@ -1,5 +1,7 @@
 # Integrated assistant preview
 
+Source update 2026-11-04: View places the Assistant control at the far right of the ribbon with the existing original comment icon, an accessible Assistant name and a tooltip. It stays visible while the other View groups scroll. The title-bar control and assistant toggle command are unchanged. Installed builds have not been replaced by this source update.
+
 Current compact-panel rollout (2026-11-03): GridCraft **0.16.0 (`e8f93495`)** uses the separately
 installed shared assistant **0.1.2**. The header provides **New chat**, **Chat history** and a
 settings gear; the rounded composer holds file `+`, model and Send/Stop controls. Quick model

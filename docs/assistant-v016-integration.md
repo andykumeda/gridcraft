@@ -153,3 +153,25 @@ with 3280 passing tests and one ignored timing benchmark.
 
 These builds are locally signed, not notarized or publicly released. Real provider inference,
 IME, clipboard, VoiceOver and published-feed update activation remain separate checks.
+
+## Assistant toolbar refinement — 2026-11-04
+
+| Workstream | State | Acceptance and verification | Release state |
+|---|---|---|---|
+| View Assistant | Verified | Right-edge placement and pointer/keyboard toggle regression passed at 640 and 1200 points in light/dark themes; all four offscreen renders reviewed. Existing title-bar control retained. | Source only; no installation or release. |
+
+The control reuses the existing contributor-original comment icon and large-ribbon button.
+No new assets, dependencies, commands or provider settings are introduced.
+
+Verification: `cargo fmt --all -- --check`, `cargo clippy -p gridcraft-ui-egui -j 2 --all-targets -- -D warnings`,
+`xtask assets`, `xtask layers`, `xtask wasm`, `xtask keytips --check` and `xtask parity --check` passed.
+The UI integration binary passed all six `system_theme` tests, six `ribbon_layout` tests, two
+`widgets` tests and `renders_every_ribbon_tab_without_panicking`. The new regression checks
+right-edge placement, an accessible Assistant button, pointer opening and keyboard closing.
+
+A broader `ribbon` name-filter run passed 24 tests and failed the existing
+`language_switch_renders_the_ribbon_and_persists` test: the optional craft-fonts input on this
+machine lacks the current manifest, leaving no bundled glyph for Vietnamese U+1EBB.
+That locale check remains blocked by its font input; no locale coverage is claimed.
+The whole-workspace CI sweep, native VoiceOver and physical keyboard checks were not run.
+No dependency, font, provider or installed app was changed.

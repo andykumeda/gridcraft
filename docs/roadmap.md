@@ -1,10 +1,12 @@
 # Roadmap detail
 
-> **Last reviewed:** 2026-10-11 · **Last updated:** 2026-11-03 · **Change:** minor (private integrated assistant preview) · **Target:** Microsoft Excel (Microsoft 365)
+> **Last reviewed:** 2026-10-11 · **Last updated:** 2026-11-04 · **Change:** minor (private integrated assistant preview) · **Target:** Microsoft Excel (Microsoft 365)
 
 Forward-looking plan. The one-page summary is [`ROADMAP.md`](../ROADMAP.md); the ranked work
 list is [`gaps.md`](gaps.md); numbers and method are in
 [`target-app-parity.md`](target-app-parity.md). Estimates are Opus 5.5 agent-hours.
+
+Source refinement 2026-11-04: View pins the Assistant control at the ribbon’s far right with an existing original icon. See [verification ledger](assistant-v016-integration.md#assistant-toolbar-refinement--2026-11-04). Source-only; no milestone estimate change.
 
 ## Current focus
 
@@ -113,6 +115,7 @@ to check our files, and Windows machines with the reported GPU drivers.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-04 | patch | View Assistant pinned at right with existing icon; source checks and delivery recorded in assistant integration ledger; estimates unchanged |
 | 2026-11-03 | patch | Compact helper 0.1.2 and signed GridCraft e8f93495 deployed on both Macs; all exact-CI gates and final native settings/MCP checks passed; estimates unchanged |
 | 2026-10-29 | minor | Private integrated assistant preview; shared provider/settings UI, bounded workbook commands, separate package and updater isolation; verification recorded in assistant ledger |
 | 2026-10-23 | minor | Measuring: tests run through `cargo xtask test` |

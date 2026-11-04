@@ -3,10 +3,6 @@ use super::{Icon, Rect, SheetApp, Tokens, Ui, big_button, json, keytip_table, po
 
 /// Draws the View tab: view modes, ruler/gridlines/formula-bar/headings toggles, zoom, freeze panes, theme, animations, interface size and language.
 pub(super) fn view(app: &mut SheetApp, ui: &mut Ui) {
-    if ui.selectable_label(app.assistant.open, app.ui.language.tr("Assistant")).clicked() {
-        app.run_or_alert("ui.assistant", json!({}));
-    }
-    sep(ui);
     let t = Tokens::get(ui.ctx());
     let _ = t;
     for (icon, label, cmd) in [
@@ -183,4 +179,17 @@ fn switch_windows(app: &mut SheetApp, ui: &mut Ui) {
             }
         }
     });
+}
+
+/// A direct control outside the scrolling groups, so it remains reachable in narrow windows.
+pub(super) fn assistant_button(app: &mut SheetApp, ui: &mut Ui) -> Rect {
+    let response = big_button(ui, Icon::Comment, "Assistant", "Assistant", false);
+    response.widget_info(|| egui::WidgetInfo::selected(egui::Role::Button, true, app.assistant.open, app.ui.language.tr("Assistant")));
+    if app.assistant.open {
+        ui.painter().rect_stroke(response.rect, 5.0, egui::Stroke::new(1.0, Tokens::get(ui.ctx()).accent), egui::StrokeKind::Inside);
+    }
+    if response.clicked() {
+        app.run_or_alert("ui.assistant", json!({}));
+    }
+    response.rect
 }
