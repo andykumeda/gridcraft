@@ -1,5 +1,7 @@
 # GridCraft — instructions for agents
 
+Before starting any new task, read `../pdfcraft/docs/assistant-toolbar-next-update.md` for the deferred cross-app assistant toolbar request. It is context only: do not implement it unless the user requests implementation. If that sibling checkout is unavailable, note that the document could not be read.
+
 GridCraft is a clean-room, open-source, Rust-native spreadsheet targeting Microsoft Excel parity — and superiority (speed, openness, agent control). It runs natively on macOS, Windows, Linux and BSD, and on the web via WASM. Siblings with the same conventions: `../designcraft` (InDesign-class, the closest reference), `../photocraft` (Photoshop), `../vectorcraft` (Illustrator), `../pdfcraft` (Acrobat), `../filmcraft` (Premiere), `../lightcraft` (Lightroom), `../effectcraft` (After Effects).
 
 ## Start every session here
