@@ -1,6 +1,6 @@
 # Local assistant-enabled candidates and installed smoke
 
-Updated 2026-11-02. Local signed builds only; not notarized or publicly released.
+Updated 2026-11-03. Locally signed GridCraft 0.16.0 (`e8f93495`) and shared helper 0.1.2 are deployed on both Macs; no notarization or public release.
 
 ## Initial v0.16 candidate
 
@@ -114,3 +114,30 @@ profile/update-disabled launcher checks; its GUI was not separately exercised. S
 verification used normal keychain access; the sandbox cannot evaluate this local certificate.
 Earlier live-update, input-composition/clipboard/VoiceOver and independent-upgrade demonstration
 limits still apply.
+
+## Compact-panel final installation
+
+The signed standard and existing Mini Preview candidates from production source
+`e8f934958832f9a6efe7d1795b7b2582c9c6d806` were installed atomically. Standard is installed
+on both Macs; Preview is installed only on the Mini. The signed native hashes are:
+
+| App | SHA-256 |
+| --- | --- |
+| Standard | `ffc3cd4111677cb89b26549bb26d775a0d386cf1384595e965bcfd696db1a6c4` |
+| Preview native | `e8a2e142fba63e0436322e45ca9f776c06794d3a4d3035751488ffeec2b415f2` |
+
+Backups: `~/Applications/Craft Rollout Backups/2026-11-03-compact/` on each Mac. The CLI
+retains its verified prior bytes (`58c4cd2d282f2079fc1a1d8ae49be805019245c4968aca7804187c9730893ead`); model/provider settings and personal
+workbooks/history were not migrated. The host Git pin stays 83e61084; independently installed
+helper 0.1.2 (3dda16ac) supplies New chat, Chat history, gear settings, file `+` and model controls.
+Update version/check/status are hidden from chat and shown in settings.
+
+Final installed native gear/settings and synthetic read-only MCP checks passed for Mini standard,
+Mini Preview and MacBook standard. Each listed 22 tools, read `[[2,5],[3,null]]` unchanged and
+released its test-owned process/listener. Exact source CI passed all 10 steps (3280 tests passed,
+one ignored timing benchmark). Source/validation separation, final per-device evidence roots
+and the resolved MacBook OCR cold-start retry are recorded in
+[the integration ledger](assistant-v016-integration.md#final-two-mac-compact-panel-deployment--2026-11-03).
+
+No live provider inference, IME, clipboard, VoiceOver or published-feed update activation was
+performed for this revision. No public release was created.

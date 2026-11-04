@@ -1,8 +1,16 @@
 # Assistant preview implementation ledger
 
+Updated 2026-11-03. Current local delivery is GridCraft **0.16.0 (`e8f93495`)** with shared
+helper **0.1.2**: standard on both Macs and existing Preview on the Mini. Exact source CI and
+final installed native gear/settings/read-only MCP checks passed. Source, validation commit,
+signed hashes, backups and remaining checks are in [the current integration ledger](assistant-v016-integration.md#final-two-mac-compact-panel-deployment--2026-11-03).
+No public release was created.
+
+## Historical 0.13 preview implementation
+
 Updated 2026-10-29 (America/Los_Angeles). **Implemented, verified, packaged and locally deployed: 0.13.0 (`00cb4830`).**
 
-Private local preview. No push or public release is authorized.
+The following preview notes are historical; current task-branch source and local deployment status are recorded above.
 
 | Workstream | Owner | State | Acceptance / dependencies |
 | --- | --- | --- | --- |

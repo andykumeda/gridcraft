@@ -1,16 +1,18 @@
 # Integrated assistant preview
 
-Current compact-panel source (2026-11-03): the header uses a Chats menu and a settings gear;
-the rounded composer holds the file `+` menu, model picker and Send/Stop. Quick model choices
-retain validated streaming/tool support and use an app override. Version and helper update
-controls appear in settings after the host and helper are updated. Older helper versions keep
-the recovery toolbar. See [the current integration ledger](assistant-v016-integration.md) for
-source, candidate and installation state; the preview history below is retained as historical evidence.
+Current compact-panel rollout (2026-11-03): GridCraft **0.16.0 (`e8f93495`)** uses the separately
+installed shared assistant **0.1.2**. The header provides **New chat**, **Chat history** and a
+settings gear; the rounded composer holds file `+`, model and Send/Stop controls. Quick model
+choices retain validated streaming/tool support and use an app override. Helper version, update
+checks and update status stay inside settings. See [the current integration ledger](assistant-v016-integration.md)
+for the per-device acceptance results. The older preview history below is retained as historical evidence.
 
 For current source builds, the independently installed assistant now uses the complete external
 [MCP tool catalog and application dispatcher](assistant-mcp-parity.md). The restrictions described
 below document the older installed preview; they do not describe the updated sidebar adapter.
-The new adapter has not been released or deployed.
+The adapter is locally installed; these customized packages are not notarized or publicly released.
+
+## Historical 0.13 preview
 
 Updated 2026-10-29 (America/Los_Angeles). Preview **0.13.0 (`00cb4830`)** is installed at
 `/Applications/GridCraft Assistant Preview.app`. Full CI and installed Codex (Terra) and Ollama edit/read-back/Undo

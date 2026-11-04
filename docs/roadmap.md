@@ -1,6 +1,6 @@
 # Roadmap detail
 
-> **Last reviewed:** 2026-10-11 · **Last updated:** 2026-10-29 · **Change:** minor (private integrated assistant preview) · **Target:** Microsoft Excel (Microsoft 365)
+> **Last reviewed:** 2026-10-11 · **Last updated:** 2026-11-03 · **Change:** minor (private integrated assistant preview) · **Target:** Microsoft Excel (Microsoft 365)
 
 Forward-looking plan. The one-page summary is [`ROADMAP.md`](../ROADMAP.md); the ranked work
 list is [`gaps.md`](gaps.md); numbers and method are in
@@ -113,6 +113,7 @@ to check our files, and Windows machines with the reported GPU drivers.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-03 | patch | Compact helper 0.1.2 and signed GridCraft e8f93495 deployed on both Macs; all exact-CI gates and final native settings/MCP checks passed; estimates unchanged |
 | 2026-10-29 | minor | Private integrated assistant preview; shared provider/settings UI, bounded workbook commands, separate package and updater isolation; verification recorded in assistant ledger |
 | 2026-10-23 | minor | Measuring: tests run through `cargo xtask test` |
 | 2026-10-11 | minor | PivotTable calculated fields landed |
@@ -123,3 +124,5 @@ to check our files, and Windows machines with the reported GPU drivers.
 Private assistant preview: [behavior](assistant.md) and [implementation/delivery ledger](assistant-implementation.md). Assistant integration does not change the existing Excel-parity assessment.
 
 - 2026-11-03 — Compact shared assistant panel integration: one locked craft-libs revision `83e61084` supplies helper0.1.1 and settings-only update controls. Verification and signed candidate preparation are tracked in [the assistant integration ledger](assistant-v016-integration.md); installed-app acceptance remains a separate rollout step. Readiness estimates unchanged.
+
+- 2026-11-03 — Compact-panel rollout completed: GridCraft 0.16.0 production source e8f93495 installed on Mini/MacBook standard and existing Mini Preview, with independently updated helper 0.1.2 (3dda16ac). Exact CI all ten gates/3280 passing tests and final native gear/settings/MCP smoke passed; signed backups retained. Validation commit 2002be68 changes tests/docs only. No readiness estimate change.

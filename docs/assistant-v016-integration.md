@@ -1,6 +1,6 @@
 # GridCraft v0.16 assistant integration
 
-Status: Verified source, signed candidates and installed helper/read-only MCP smoke on both Macs.
+Updated 2026-11-03. Status: GridCraft 0.16.0 production source `e8f93495` and helper 0.1.2 are locally deployed; final native gear/settings and read-only MCP smoke passed on both Macs.
 This isolated task branch reconciles the assistant-enabled source with upstream `85e51e00`
 (GridCraft 0.16.0). Installation is managed separately; current installed verification is in
 the candidate ledger.
@@ -63,12 +63,12 @@ are made by this correction/verification workstream.
 
 | Workstream | Owner | State | Acceptance and verification | Release |
 | --- | --- | --- | --- | --- |
-| Shared revision integration | Grid workstream | Verified | Locked shared revision `83e61084`: UI326, MCP25, strict all-target lint, assets26, layers17, WASM, format and diff checks passed | Not installed |
+| Shared revision integration | Grid workstream | Verified | Locked shared revision `83e61084`: UI326, MCP25, strict all-target lint, assets26, layers17, WASM, format and diff checks passed | Production source `e8f93495`; installed records below |
 | Signed desktop candidates | Grid workstream | Verified | Required pinned-font optimized desktop build passed; strict local-certificate signatures, source stamp and ZIP round-trip checks passed for standard and Preview | Installation owned by rollout coordinator |
 | Exact repository CI | Grid workstream | Verified | All 10 `cargo xtask ci` steps passed with required pinned fonts, build/test jobs 1; 3280 tests passed, one timing benchmark ignored | Pre-install gate passed |
 
-The helper owns chat presentation: a settings gear, Chats menu, compact file/model composer
-controls and rounded message/composer styling. The app rebuild moves helper version and update
+The helper owns chat presentation. Helper 0.1.2 provides visible New chat, a Chat history menu,
+a settings gear, compact file/model composer controls and rounded message/composer styling. The app rebuild moves helper version and update
 controls into settings, while retaining the update toolbar for an older helper that cannot
 report its settings view. Provider selection, credentials, workbook state and chat storage
 are not migrated by this source update. Existing Preview profile isolation and update opt-out
@@ -120,3 +120,36 @@ validation-only follow-up changes one test fixture and this evidence document. A
 confirmed no production, asset or configuration changes, and both signed native hashes above
 were recomputed unchanged. Candidate metadata is not relabelled with the validation commit.
 The rollout coordinator records the separate validation commit and per-device installation/QA.
+
+## Final two-Mac compact-panel deployment — 2026-11-03
+
+The rollout coordinator atomically installed the locally certificate-signed standard app on
+both Macs and replaced the existing Mini Preview. Previous bundles are retained under
+`~/Applications/Craft Rollout Backups/2026-11-03-compact/` on each device. No Preview was added
+to the MacBook. The unchanged signed CLI remains installed.
+
+| Device | Installed app | State | Final evidence root |
+| --- | --- | --- | --- |
+| AKsMini | `/Applications/GridCraft.app` | Deployed | `/private/tmp/gridcraft-installed-smoke-4vikfzy4` |
+| AKsMini | `/Applications/GridCraft Assistant Preview.app` | Deployed | `/private/tmp/gridcraft-installed-smoke-4orcfvji` |
+| AKs-MBPro.local | `/Applications/GridCraft.app` | Deployed | `/private/tmp/gridcraft-installed-smoke-p0ihfr_p` |
+
+Each final receipt confirms production source `e8f934958832f9a6efe7d1795b7b2582c9c6d806`,
+a valid app signature, connected installed helper 0.1.2, native gear/settings-only update
+controls, all 22 MCP tools and an unchanged synthetic `A1:B2` read-back of `[[2,5],[3,null]]`.
+Test-owned processes exited and ephemeral listeners were released. No provider inference was
+sent, and the checks used isolated settings and synthetic workbooks. The initial MacBook OCR
+helper cold-start failure was resolved by a retry without a product change; the final receipt
+above passed all checks.
+
+The host still pins reviewed shared revision `83e61084dee3117d34f95600d6ec68bad8b0b9b5`.
+Independent helper 0.1.2, source `3dda16ac779f0ffbfd91a4eefe720346aca006d2`, adds visible
+New chat and a Chat history dropdown. Helper version, update checks and update status remain
+inside settings. That helper-only follow-up used the existing protocol/settings/history 1
+contract and did not rebuild or relabel these host binaries. The validation-only commit
+`2002be680fc7e99100dfa44a6b8b543a9375b5bf` changes only the tooltip fixture and evidence docs;
+the signed candidate production-source stamp remains e8f93495. Exact CI passed all 10 steps
+with 3280 passing tests and one ignored timing benchmark.
+
+These builds are locally signed, not notarized or publicly released. Real provider inference,
+IME, clipboard, VoiceOver and published-feed update activation remain separate checks.

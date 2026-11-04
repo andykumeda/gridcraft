@@ -119,3 +119,14 @@ checkpoint state. Finish chats/settings edits and close the Assistant panel if p
 defers restart. Missing or failed helpers do not block app updates through stale busy flags.
 See [candidate and installed-smoke evidence](assistant-candidates.md) for the correction and
 remaining live-update verification.
+
+## Current local rollout — 2026-11-03
+
+GridCraft production source e8f93495 is installed as standard on both Macs and as Preview on
+the Mini. Its reviewed shared-library pin remains 83e61084. The separately installed assistant
+was updated to 0.1.2 (source 3dda16ac) without another host rebuild: New chat and Chat history
+are explicit controls, while helper version/update checks/update status are inside gear settings.
+Final installed native placement and read-only MCP smoke passed on all three installed bundles.
+Exact source CI passed all ten gates; the validation-only 2002be68 test/doc commit did not change
+the signed production binaries. See [the integration ledger](assistant-v016-integration.md)
+for signed hashes and backup locations. Published-feed update activation remains unverified.
