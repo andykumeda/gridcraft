@@ -104,7 +104,7 @@ struct Clicks {
 #[test]
 /// The main button clicks once and the arrow twice separately; the tooltip keeps the platform shortcut, and the icon sits above the full-width label.
 fn big_split_button_separates_the_default_action_from_the_menu() {
-    let mut h = crate::common::builder().with_size(vec2(300.0, 200.0)).build_ui_state(
+    let mut h = crate::common::builder().with_os(egui::os::OperatingSystem::from_target_os()).with_size(vec2(300.0, 200.0)).build_ui_state(
         |ui, c: &mut Clicks| {
             let (main, arrow) = widgets::big_split_button(ui, Icon::Sum, "Auto\nSum", "AutoSum");
             c.main += u32::from(main.clicked());

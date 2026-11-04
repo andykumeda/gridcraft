@@ -64,7 +64,8 @@ are made by this correction/verification workstream.
 | Workstream | Owner | State | Acceptance and verification | Release |
 | --- | --- | --- | --- | --- |
 | Shared revision integration | Grid workstream | Verified | Locked shared revision `83e61084`: UI326, MCP25, strict all-target lint, assets26, layers17, WASM, format and diff checks passed | Not installed |
-| Signed desktop candidates | Grid workstream | In progress | Required pinned-font optimized desktop build; strict local-certificate signatures, source stamp and archive checks for standard and Preview | Installation owned by rollout coordinator |
+| Signed desktop candidates | Grid workstream | Verified | Required pinned-font optimized desktop build passed; strict local-certificate signatures, source stamp and ZIP round-trip checks passed for standard and Preview | Installation owned by rollout coordinator |
+| Exact repository CI | Grid workstream | Verified | All 10 `cargo xtask ci` steps passed with required pinned fonts, build/test jobs 1; 3280 tests passed, one timing benchmark ignored | Pre-install gate passed |
 
 The helper owns chat presentation: a settings gear, Chats menu, compact file/model composer
 controls and rounded message/composer styling. The app rebuild moves helper version and update
@@ -78,6 +79,44 @@ run passed325 tests and failed only the old assertion that New chat was always v
 updated test opens Chats, verifies New chat is reachable, closes the menu and closes the panel;
 the full rerun passed326/326. MCP passed25/25. Scoped UI/desktop/CLI all-target Clippy passed
 with warnings denied. WASM passed with the existing `backstage::Modified` dead-code warning.
-No full-workspace CI, installed GUI, provider inference or signed update activation is claimed
-by this candidate-preparation workstream. The previously verified signed CLI is retained; this
+The initial scoped checks did not constitute full-workspace CI; the exact-CI follow-up below
+records that completed gate. Installed GUI, provider inference and signed feed-update activation
+remain separate rollout checks. The previously verified signed CLI is retained; this
 change does not change its engine/tool implementation.
+
+### Signed compact-panel candidates
+
+Source `e8f934958832f9a6efe7d1795b7b2582c9c6d806` is committed/pushed. The required-font
+optimized desktop build passed in 10m 22s with the existing Noto CJK asset-policy exclusion.
+Candidate root is `/private/tmp/gridcraft-compact-candidates-e8f93495`; `receipt.json` records
+source/shared/font revisions, signed metadata, hashes and the adapted packaging script. Standard
+and Preview archives were extracted and strictly verified. Both assembled apps additionally
+satisfied an explicit identifier and configured-certificate requirement. No ad-hoc signing or
+notarization claim is made. Existing Preview isolation/update opt-out remains unchanged.
+
+| Candidate | Signed native executable SHA-256 |
+| --- | --- |
+| Standard | `ffc3cd4111677cb89b26549bb26d775a0d386cf1384595e965bcfd696db1a6c4` |
+| Preview | `e8a2e142fba63e0436322e45ca9f776c06794d3a4d3035751488ffeec2b415f2` |
+| Retained CLI (source 40305767) | `58c4cd2d282f2079fc1a1d8ae49be805019245c4968aca7804187c9730893ead` |
+
+The rollout coordinator may stage these bundles while exact CI runs, but installation and
+per-device native acceptance remain separate and are not claimed by candidate preparation.
+
+### Exact-CI validation follow-up
+
+The first exact `cargo xtask ci` run passed workspace strict lint and all but one UI integration
+test. `ribbon_layout::big_split_button_separates_the_default_action_from_the_menu` expected the
+compile-target macOS shortcut while egui_kittest now defaults its runtime OS to Nix. The fixture
+now explicitly selects `OperatingSystem::from_target_os()` in that one harness. Production
+widget behavior is unchanged. The original failing run was retained, and the focused corrected
+case passed before the exact CI rerun.
+
+The exact rerun passed all ten steps: i18n report, formatting, workspace/all-target strict Clippy,
+workspace tests, doctests, assets, layers, WASM, parity and generated keytips. Tests totalled
+3280 passed, zero failed and one ignored timing benchmark. UI integration passed 1058/1058.
+The candidate production source remains `e8f934958832f9a6efe7d1795b7b2582c9c6d806`; the
+validation-only follow-up changes one test fixture and this evidence document. A path audit
+confirmed no production, asset or configuration changes, and both signed native hashes above
+were recomputed unchanged. Candidate metadata is not relabelled with the validation commit.
+The rollout coordinator records the separate validation commit and per-device installation/QA.
