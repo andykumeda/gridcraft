@@ -5,6 +5,31 @@ The active app is `/Applications/GridCraft.app` with the integrated Assistant; i
 Assistant Preview app and old MCP shortcut have been retired. This closes this app's workstream only. The
 [suite consolidation ledger](https://github.com/andykumeda/pdfcraft/blob/codex/independent-assistant/docs/single-app-assistant-rollout.md) owns overall progress; this per-app deployment does not claim all four apps are complete.
 
+## Top-toolbar Assistant placement — 2026-11-05
+
+| Workstream | Owner | State | Acceptance / evidence | Delivery |
+| --- | --- | --- | --- | --- |
+| Title toolbar | Grid toolbar agent | Verified | One sparkle Assistant control immediately beside Dark Mode; unique icon/accessibility name, pointer and keyboard toggles; 640/1200-point light/dark regression and reviewed renders | Source only; installed app unchanged pending package acceptance |
+
+The current request supersedes the old far-right View-ribbon placement. Use a contributor-original
+code-drawn sparkle (distinct from the adjacent Comments icon) and the existing `ui.assistant` command; remove the duplicate ribbon control.
+Scope is title/ribbon layout, existing appearance regression and user docs. Workbook commands,
+provider configuration, external assets, shared bridge, packaging contracts and stored data do not change.
+Local `plan/STATUS.md`, execution plan and architecture files are absent; committed architecture
+and assistant delivery docs supply the current context.
+
+The replacement placement regression failed on the old layout (two Assistant controls) and passed
+on the change. The existing native-panel test now expects the requested single toolbar control;
+Chats and Close behavior still pass. Final `cargo xtask ci` passed all ten gates, 3,437 tests
+passed / one ignored, including doctests, strict workspace Clippy, assets/layers and WASM.
+An additional final scoped UI `--all-targets -D warnings` check passed after adding the distinct
+sparkle. Existing WASM dead-code warnings remain. Logs: `/private/tmp/grid-toolbar-ci-final.log`,
+`/private/tmp/grid-toolbar-final-lint.log`, `/private/tmp/grid-toolbar-{red,green}.log`.
+Four final offscreen 640/1200-point light/dark renders were inspected under
+`/private/tmp/grid-toolbar-final-*.png`; the icon remains adjacent to theme and visible without
+ribbon scrolling. No new external asset/dependency, provider request, native installation,
+physical keyboard, VoiceOver or private-workbook check is claimed at this source checkpoint.
+
 ## Current single-app deployment — 2026-11-05
 
 | Component | Installed / verified state |

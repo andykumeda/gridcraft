@@ -339,3 +339,5 @@ Private branch work: integrated [assistant preview](docs/assistant.md); [deliver
 - 2026-11-05: Added reproducible single-app Assistant packaging with verified underlying-source metadata; installation and launcher preservation are tracked separately in the suite consolidation ledger.
 
 - 2026-11-05: Documented the deployed single normal app on both Macs, managed-launcher update ownership, helper0.1.7 outlines, preserved data and retired Preview delivery. This app is deployed; overall suite completion is tracked separately in the central ledger. Documentation-only closeout, no new code checks claimed.
+
+- 2026-11-05: Moved the integrated Assistant to one top-toolbar icon beside Dark Mode; verification and deployment are tracked in [the assistant rollout ledger](docs/assistant-v0161-rollout.md#top-toolbar-assistant-placement--2026-11-05). No parity/readiness estimate changed.

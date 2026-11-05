@@ -40,7 +40,7 @@ fn refused_busy_send_preserves_existing_request_files() {
 }
 
 #[test]
-fn toolbar_and_view_controls_open_and_close_the_native_panel() {
+fn toolbar_control_opens_and_closes_the_native_panel() {
     let mut app = app();
     app.ui.ribbon_tab = "View".into();
     let mut h = egui_kittest::Harness::builder()
@@ -52,7 +52,7 @@ fn toolbar_and_view_controls_open_and_close_the_native_panel() {
         .build_ui_state(|ui, app: &mut SheetApp| app.ui(ui), app);
     h.run_steps(3);
     let controls = h.query_all_by_label("Assistant").collect::<Vec<_>>();
-    assert_eq!(controls.len(), 2, "the toolbar and View tab each expose Assistant");
+    assert_eq!(controls.len(), 1, "one toolbar control, with no duplicate in the View ribbon");
     controls[0].click();
     h.run_steps(3);
     assert!(h.state().assistant.open);

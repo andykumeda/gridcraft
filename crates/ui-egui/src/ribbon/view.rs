@@ -180,16 +180,3 @@ fn switch_windows(app: &mut SheetApp, ui: &mut Ui) {
         }
     });
 }
-
-/// A direct control outside the scrolling groups, so it remains reachable in narrow windows.
-pub(super) fn assistant_button(app: &mut SheetApp, ui: &mut Ui) -> Rect {
-    let response = big_button(ui, Icon::Comment, "Assistant", "Assistant", false);
-    response.widget_info(|| egui::WidgetInfo::selected(egui::Role::Button, true, app.assistant.open, app.ui.language.tr("Assistant")));
-    if app.assistant.open {
-        ui.painter().rect_stroke(response.rect, 5.0, egui::Stroke::new(1.0, Tokens::get(ui.ctx()).accent), egui::StrokeKind::Inside);
-    }
-    if response.clicked() {
-        app.run_or_alert("ui.assistant", json!({}));
-    }
-    response.rect
-}

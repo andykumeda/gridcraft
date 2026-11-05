@@ -194,7 +194,7 @@ fn title_bar_switch_and_file_menu_choose_the_theme() {
 }
 
 #[test]
-fn view_assistant_stays_at_the_right_edge_and_toggles_in_both_themes() {
+fn title_assistant_is_beside_theme_and_toggles_in_both_themes() {
     for width in [640.0, 1200.0] {
         for dark in [false, true] {
             let mut session = Session::new();
@@ -204,14 +204,19 @@ fn view_assistant_stays_at_the_right_edge_and_toggles_in_both_themes() {
             app.ui.dark = dark;
             app.ui.system_theme = false;
             let mut h = crate::common::harness_with(crate::common::builder().with_size(egui::vec2(width, 800.0)), app, 4);
-            let button = h.get_all_by_role_and_label(egui::Role::Button, "Assistant").find(|b| b.rect().top() > 50.0).expect("View Assistant");
+            let buttons: Vec<_> = h.get_all_by_role_and_label(egui::Role::Button, "Assistant").collect();
+            assert_eq!(buttons.len(), 1, "one Assistant toggle, including on View");
+            let button = &buttons[0];
             let rect = button.rect();
-            assert!(rect.right() <= width && rect.right() > width - 40.0, "{width}: {rect:?}");
-            assert!(rect.left() > h.get_by_role_and_label(egui::Role::Button, "Normal").rect().right());
+            let theme = h.get_by_role_and_label(egui::Role::CheckBox, "Dark Mode").rect();
+            assert!((rect.center().y - theme.center().y).abs() < 1.0, "{width}: {rect:?}, {theme:?}");
+            assert!(rect.right() <= width && rect.left() >= 0.0, "{width}: {rect:?}");
+            assert!(rect.width() <= 30.0, "Assistant is an icon: {rect:?}");
+            assert!((rect.left() - theme.right()).abs() < 12.0, "adjacent controls: {rect:?}, {theme:?}");
             button.click();
             h.run_steps(2);
             assert_eq!(h.state_mut().run("ui.assistant.status", json!({})).unwrap()["open"], true);
-            h.get_all_by_role_and_label(egui::Role::Button, "Assistant").find(|b| b.rect().top() > 50.0).unwrap().focus();
+            h.get_by_role_and_label(egui::Role::Button, "Assistant").focus();
             h.run_steps(2);
             h.key_press(egui::Key::Enter);
             h.run_steps(2);

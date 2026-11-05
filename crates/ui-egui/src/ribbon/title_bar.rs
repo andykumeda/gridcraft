@@ -121,10 +121,6 @@ pub fn title_bar(app: &mut SheetApp, ui: &mut Ui) {
             let left_end = ui.min_rect().right();
             let right = ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                 ui.add_space(8.0);
-                if ui.selectable_label(app.assistant.open, app.ui.language.tr("Assistant")).clicked() {
-                    app.run_or_alert("ui.assistant", json!({}));
-                }
-
                 let __k = icon_button(ui, Icon::Search, t.text_dim, "Search commands", vec2(28.0, ch));
                 control_keytip(app, ui, &__k, "commandSearch");
                 if __k.clicked() {
@@ -147,6 +143,14 @@ pub fn title_bar(app: &mut SheetApp, ui: &mut Ui) {
                 control_keytip(app, ui, &__k, "comments");
                 if __k.clicked() {
                     app.open_dialog("comments", json!({}));
+                }
+                let assistant = icon_button(ui, Icon::Assistant, t.text_dim, "Assistant", vec2(28.0, ch));
+                assistant.widget_info(|| egui::WidgetInfo::selected(egui::Role::Button, true, app.assistant.open, app.ui.language.tr("Assistant")));
+                if app.assistant.open {
+                    ui.painter().rect_stroke(assistant.rect, 4.0, Stroke::new(1.0, t.accent), StrokeKind::Inside);
+                }
+                if assistant.clicked() {
+                    app.run_or_alert("ui.assistant", json!({}));
                 }
                 // Quick light/dark switch (#194); right-click offers System as well. The same
                 // choice lives in File › Display theme and the View tab.

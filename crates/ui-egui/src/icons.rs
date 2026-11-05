@@ -101,6 +101,8 @@ pub enum Icon {
     Shapes,
     Link,
     Comment,
+    /// Assistant: an original four-point sparkle with a small companion glint.
+    Assistant,
     Note,
     TextBox,
     Symbol,
@@ -599,6 +601,11 @@ fn paint_with(p: &Painter, rect: Rect, icon: Icon, c: Color32, pal: &Palette) {
             g.line(&[(6.0, 10.0), (10.0, 6.0)], c, 1.2);
             g.rect(2.0, 8.0, 6.0, 4.0, None, Some(c));
             g.rect(8.0, 4.0, 6.0, 4.0, None, Some(c));
+        }
+        Icon::Assistant => {
+            g.closed(&[(6.5, 1.5), (8.0, 5.0), (11.5, 6.5), (8.0, 8.0), (6.5, 11.5), (5.0, 8.0), (1.5, 6.5), (5.0, 5.0)], c, 1.1);
+            g.line(&[(12.5, 9.5), (12.5, 14.5)], c, 1.1);
+            g.line(&[(10.0, 12.0), (15.0, 12.0)], c, 1.1);
         }
         Icon::Comment | Icon::Note => {
             g.poly(&[(2.0, 3.0), (14.0, 3.0), (14.0, 11.0), (2.0, 11.0)], if icon == Icon::Note { pal.wash(Cat::Amber) } else { paper });
