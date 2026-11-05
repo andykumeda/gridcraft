@@ -72,3 +72,25 @@ sha256() {
   if command -v sha256sum >/dev/null; then sha256sum "$file" | cut -d' ' -f1; else shasum -a 256 "$file" | cut -d' ' -f1; fi
   return
 }
+
+# Optional signed assistant compatibility metadata. Both values are supplied by the
+# packager's explicit release configuration; ordinary packages have neither field.
+write_assistant_update_metadata() {
+  local app_info="$1" app_repo="${CRAFT_UPDATE_REPOSITORY:-}" bridge="${CRAFT_ASSISTANT_BRIDGE_PROTOCOL:-}"
+  if [[ -z "$app_repo" && -z "$bridge" ]]; then return 0; fi
+  if [[ -z "$app_repo" || ! "$app_repo" =~ ^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$ ||
+        "${app_repo%/*}" = . || "${app_repo%/*}" = .. || "${app_repo#*/}" = . || "${app_repo#*/}" = .. ]]; then
+    echo "error: configure CRAFT_UPDATE_REPOSITORY as owner/repository together with CRAFT_ASSISTANT_BRIDGE_PROTOCOL" >&2
+    return 2
+  fi
+  if [[ ! "$bridge" =~ ^[1-9][0-9]*$ || ${#bridge} -gt 10 ]]; then
+    echo "error: CRAFT_ASSISTANT_BRIDGE_PROTOCOL must be a nonzero u32" >&2
+    return 2
+  fi
+  if (( 10#$bridge > 4294967295 )); then
+    echo "error: CRAFT_ASSISTANT_BRIDGE_PROTOCOL exceeds u32" >&2
+    return 2
+  fi
+  plutil -replace CraftUpdateRepository -string "$app_repo" "$app_info"
+  plutil -replace CraftAssistantBridgeProtocol -integer "$bridge" "$app_info"
+}

@@ -8,6 +8,34 @@ checks begin. The app then uses `craft-update` with an explicit custom release p
 builds retain their existing updater. `--disable-updates` always blocks both startup and manual
 checks; configuring a source never overrides that opt-out.
 
+## Single normal app packaging — 2026-11-05
+
+The owner has replaced the separate Preview delivery requirement with one normal
+GridCraft.app containing the Assistant on both Macs. `packaging/macos/assistant-preview.sh --standard` packages a verified existing native under the normal name and bundle ID.
+It preserves the existing standard document profile, leaves old Preview profiles intact,
+and continues to use the shared Craft AI store for assistant settings/conversations.
+The standard wrapper disables app self-updates; ArtCraft Launcher owns compatible app updates.
+Packaging alone does not make an unchanged official launcher preserve the Assistant.
+
+Required explicit inputs: `CRAFT_UPDATE_REPOSITORY`, `CRAFT_ASSISTANT_BRIDGE_PROTOCOL`,
+`CRAFT_UPSTREAM_TAG` and `CRAFT_UPSTREAM_SHA`. The underlying tag must match the app
+version, resolve to the supplied full commit, and be an ancestor of the binary's
+verified source commit. The signed plist carries `CraftUnderlyingTag` and
+`CraftUnderlyingCommit` alongside the assistant protocol/repository metadata.
+
+The disabled-update message now points to ArtCraft Launcher without Preview wording.
+The focused updater regression failed on the old message and passed with the correction
+(two updater tests; complete pinned fonts required for the green run).
+
+Packaging verification: shell syntax, required-input rejection, metadata valid/invalid
+cases, signed ZIP extraction, mounted DMG and copied-app strict signature checks.
+`packaging/macos/test-standard-package.sh /path/to/GridCraft.app` checks standard
+identity, updater-only wrapper, absence of Preview profile overrides, signed protocol
+and underlying-source metadata, and binary version/source. Full `cargo xtask ci` passed all ten gates on 2026-11-05
+(`/private/tmp/gridcraft-standard-ci.log`), with the complete required font input
+`b076417b`. Native release rebuild, installed acceptance and launcher delivery are
+tracked in [the central suite ledger](../../pdfcraft/docs/single-app-assistant-rollout.md).
+
 ## Configure the app source
 
 Add this app to `sources.json` in the shared assistant settings directory (macOS:

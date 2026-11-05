@@ -72,3 +72,14 @@ People trust GridCraft with their numbers; a crash loses their work. **This outr
 - Workflows in `.github/workflows/` call the shared workflows in [`storytold/craft-common-actions`](https://github.com/storytold/craft-common-actions) at `@main`, with their inputs and secrets. No other jobs: if no shared workflow does what's needed, it doesn't go here.
 - Don't add or change CI in a feature or fix PR. If the existing workflows can't build or test a change, link an existing craft-common-actions issue or PR, or open a new issue, or a PR only for a small fix that is safe for every app and does not increase CI time.
 - Some workflow files here still run their own jobs. Don't add to them. Moving a job into craft-common-actions is its own task, never part of another PR, and the job stays here until a shared workflow runs it.
+
+## Owner's single-app assistant delivery workflow (2026-11-05)
+
+- Keep one normal `/Applications/GridCraft.app` with the integrated Assistant on both
+  Macs; separate Assistant Preview apps are obsolete. Use the existing packager's
+  `--standard` mode and explicit compatible-source/underlying tag-and-commit metadata.
+- ArtCraft Launcher owns app updates and must install assistant-compatible builds;
+  installing an official upstream bundle alone removes the custom panel.
+- Preserve standard and old Preview document profiles, shared assistant settings/chats,
+  and rollback copies. Verify model/document behavior on each Mac before removing
+  active Preview bundles. Never force-quit or overwrite unsaved work.

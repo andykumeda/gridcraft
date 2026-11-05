@@ -1,4 +1,32 @@
-# Portable assistant preview packages
+# Assistant app packages
+
+The owner requires a single normal **GridCraft.app** with the integrated Assistant
+(2026-11-05). Use the existing script's `--standard` mode:
+
+```sh
+CRAFT_UPDATE_REPOSITORY=OWNER/gridcraft \
+CRAFT_ASSISTANT_BRIDGE_PROTOCOL=1 \
+CRAFT_UPSTREAM_TAG=vVERSION CRAFT_UPSTREAM_SHA=FULL_OFFICIAL_COMMIT \
+MACOS_SIGN_IDENTITY=SELECTED_CERTIFICATE \
+packaging/macos/assistant-preview.sh --standard \
+  --binary /path/to/verified/gridcraft --version VERSION \
+  --build-sha FULL_CUSTOM_SOURCE_COMMIT --output-dir /path/to/output
+```
+
+This uses the normal bundle name/identity and existing standard document profile.
+The wrapper preserves executable discovery and disables app self-updates; ArtCraft
+Launcher owns compatible app updates. Shared assistant settings/chats and old
+Preview profiles are not copied or changed. The script verifies the official
+version tag and full commit exist in the supplied binary's custom source history
+and signs this provenance alongside the assistant compatibility metadata.
+
+Run `test-standard-package.sh /path/to/GridCraft.app` on the extracted result.
+It checks standard identity, compatibility and underlying-source metadata, the
+wrapper's lack of Preview profile overrides, strict signatures, version/source,
+and rejection of mismatched underlying tags/commits. Full native acceptance on each
+Mac and a launcher that preserves the assistant are separate delivery requirements.
+
+## Historical Preview packaging (superseded for owner delivery)
 
 `assistant-preview.sh` packages an explicitly supplied release binary without building,
 installing or publishing it. The default is Apple silicon; `--arch x86_64` and

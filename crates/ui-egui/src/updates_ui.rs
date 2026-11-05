@@ -33,7 +33,7 @@ impl SheetApp {
         self.updates_rt.updater = craft_update::custom::updater(&crate::UPDATE_APP, env!("CARGO_PKG_VERSION"), root, bridge_protocol);
     }
 
-    /// Separately packaged previews must not install standard releases over themselves.
+    /// Externally managed packages must not install a different app build over themselves.
     pub fn disable_updates(&mut self) {
         self.updates_rt.disabled = true;
         self.updates_rt.startup = false;
@@ -45,10 +45,8 @@ impl SheetApp {
 pub(crate) fn start(app: &mut SheetApp, manual: bool) {
     if app.updates_rt.disabled {
         if manual {
-            app.message = Some((
-                "GridCraft".into(),
-                "Software updates are disabled for this preview. Install a new Assistant Preview package to update it.".into(),
-            ));
+            app.message =
+                Some(("GridCraft".into(), "Software updates are disabled for this launch. Use ArtCraft Launcher to update this app.".into()));
         }
         return;
     }
@@ -130,7 +128,11 @@ mod tests {
         show(&mut app, &ctx);
         assert!(!app.updates_rt.startup && !app.updates_rt.manual);
         assert!(matches!(app.updates_rt.updater.status(), Status::Idle));
-        assert!(app.message.as_ref().is_some_and(|(_, text)| text.contains("disabled")));
+        assert!(
+            app.message
+                .as_ref()
+                .is_some_and(|(_, text)| { text.contains("disabled") && text.contains("ArtCraft Launcher") && !text.contains("Preview") })
+        );
     }
     #[test]
     fn app_restart_requires_idle_assistant_and_clean_workbooks() {

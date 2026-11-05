@@ -335,3 +335,5 @@ Private branch work: integrated [assistant preview](docs/assistant.md); [deliver
 - 2026-11-03 — Compact shared assistant panel integration: one locked craft-libs revision `83e61084` supplies helper0.1.1 and settings-only update controls. Verification and signed candidate preparation are tracked in [the assistant integration ledger](docs/assistant-v016-integration.md); installed-app acceptance remains a separate rollout step. Readiness estimates unchanged.
 
 - 2026-11-03 — Compact-panel rollout completed: GridCraft 0.16.0 production source e8f93495 installed on Mini/MacBook standard and existing Mini Preview, with independently updated helper 0.1.2 (3dda16ac). Exact CI all ten gates/3280 passing tests and final native gear/settings/MCP smoke passed; signed backups retained. Validation commit 2002be68 changes tests/docs only. No readiness estimate change.
+
+- 2026-11-05: Added reproducible single-app Assistant packaging with verified underlying-source metadata; installation and launcher preservation are tracked separately in the suite consolidation ledger.
