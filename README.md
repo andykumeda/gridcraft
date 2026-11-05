@@ -347,8 +347,8 @@ Based on GridCraft by the ArtCraft team. This assistant-enabled fork is independ
 ## Integrated Assistant and app updates
 
 Open `/Applications/GridCraft.app` on either Mac. The native [Assistant](docs/assistant.md)
-is integrated into this normal app; separate Preview apps are retired. The next integrated build
-uses one **Assistant** icon beside the light/dark switch in the top toolbar. Configure the selected
+is integrated into this normal app; separate Preview apps are retired. Use the **Assistant** sparkle
+icon beside the light/dark switch in the top toolbar. Configure the selected
 model in the composer or **File → Options → Assistant**.
 
 Use the **managed ArtCraft Launcher** to check underlying official releases and update the app

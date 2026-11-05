@@ -341,3 +341,5 @@ Private branch work: integrated [assistant preview](docs/assistant.md); [deliver
 - 2026-11-05: Documented the deployed single normal app on both Macs, managed-launcher update ownership, helper0.1.7 outlines, preserved data and retired Preview delivery. This app is deployed; overall suite completion is tracked separately in the central ledger. Documentation-only closeout, no new code checks claimed.
 
 - 2026-11-05: Moved the integrated Assistant to one top-toolbar icon beside Dark Mode; verification and deployment are tracked in [the assistant rollout ledger](docs/assistant-v0161-rollout.md#top-toolbar-assistant-placement--2026-11-05). No parity/readiness estimate changed.
+
+- 2026-11-05: Installed the Assistant top-toolbar sparkle on both Macs through managed updates; independent pointer open/close, helper0.1.7, light/dark, resource/signature and protected-data checks pass. No inference or physical accessibility check was repeated.

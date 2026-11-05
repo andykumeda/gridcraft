@@ -1,9 +1,9 @@
 # Integrated assistant
 
-The active app is `/Applications/GridCraft.app` on both Macs:0.16.1/native `f5785668`
+The active app is `/Applications/GridCraft.app` on both Macs:0.16.1/native `f43086bc`
 with helper 0.1.7. Its separate Assistant Preview app is retired. Open **Assistant** in the
-top toolbar. The next integrated build places its icon beside the light/dark switch and removes
-the duplicate View-ribbon control. Configure the
+top toolbar beside the light/dark switch. Its sparkle icon indicates whether the panel is open;
+the duplicate View-ribbon control is removed. Configure the
 selected model in the composer or **File → Options → Assistant**. **New chat**, **Chat history**,
 gear settings and the outlined bottom composer remain embedded in the workbook window.
 

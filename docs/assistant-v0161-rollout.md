@@ -9,7 +9,7 @@ Assistant Preview app and old MCP shortcut have been retired. This closes this a
 
 | Workstream | Owner | State | Acceptance / evidence | Delivery |
 | --- | --- | --- | --- | --- |
-| Title toolbar | Grid toolbar agent | Verified | One sparkle Assistant control immediately beside Dark Mode; unique icon/accessibility name, pointer and keyboard toggles; 640/1200-point light/dark regression and reviewed renders | Source only; installed app unchanged pending package acceptance |
+| Title toolbar | Grid toolbar agent | Deployed | One sparkle Assistant control immediately beside Dark Mode; unique icon/accessibility name, pointer and keyboard toggles; 640/1200-point light/dark regression and reviewed renders | Normal app installed and independently checked on both Macs |
 
 The current request supersedes the old far-right View-ribbon placement. Use a contributor-original
 code-drawn sparkle (distinct from the adjacent Comments icon) and the existing `ui.assistant` command; remove the duplicate ribbon control.
@@ -28,15 +28,52 @@ sparkle. Existing WASM dead-code warnings remain. Logs: `/private/tmp/grid-toolb
 Four final offscreen 640/1200-point light/dark renders were inspected under
 `/private/tmp/grid-toolbar-final-*.png`; the icon remains adjacent to theme and visible without
 ribbon scrolling. No new external asset/dependency, provider request, native installation,
-physical keyboard, VoiceOver or private-workbook check is claimed at this source checkpoint.
+physical keyboard, VoiceOver or private-workbook check was claimed at that source checkpoint. The later delivery below supersedes installation status.
+
+### Top-toolbar package and two-Mac acceptance
+
+The optimized source `f43086bc7fce24d273549653956382106b7a3922` built successfully with
+required pinned fonts/i18n inputs. The existing standard packager produced signed ZIP/DMG;
+strict ZIP/extracted/mounted signatures, exact local certificate and standard metadata checks
+passed. `test-standard-package.sh` passed, including negative underlying-tag/commit checks.
+The first local packaging invocation omitted the optional-font licence input; that package was
+rejected before admission and its newly generated outputs were removed. The corrected package
+contains all 13 font licences byte-for-byte; prior installed resources match except the authorized
+README update. No first-package output is eligible for installation.
+
+Qualified archive: `dist/integrated/f43086bc-licensed/gridcraft-0.16.1-macos-aarch64.zip`,
+SHA-256 `647c7a107fa0fe5b1ea2dbf3875224d83ce6fa80a3e517e246a56de216386049`.
+The package verifier report is adjacent `verification.json`; build/package logs are
+`/private/tmp/grid-toolbar-{release,package-final}.log`.
+
+The managed launcher's protected route installed this exact signed native on both Macs.
+Old bundles are retained as verified ZIPs under each host's
+`~/Library/Application Support/Craft/retired-apps/2026-11-05-top-toolbar.noindex/`.
+The extracted qualification candidate was unregistered after its owned process exited;
+no second active GridCraft or Preview installation was introduced.
+
+| Device | State | Installed source / native | Independent acceptance evidence |
+| --- | --- | --- | --- |
+| AKsMini | Deployed | `f43086bc` / `fe4f8391` | `/private/tmp/gridcraft-toolbar-native-87tseav5/report.json` |
+| AKs-MBPro.local | Deployed | `f43086bc` / `fe4f8391` | `/private/tmp/gridcraft-toolbar-native-a_5n75yz/report.json` |
+
+Both installed-path trials used a disposable synthetic workbook and isolated document/AI profiles.
+An actual top-toolbar pointer click opened the panel and another closed it; helper0.1.7 and the
+configured model became ready. Light/dark screenshots were reviewed on each host, including the
+selected sparkle beside theme. The workbook values/formula, baseline file bytes, normal/retired
+Preview profiles and shared settings/chats stayed unchanged. Managed update guidance passed.
+No inference was requested. All owned processes exited normally, their OS-assigned loopback
+listeners were released, and private control keys were removed. Candidate and installed smoke
+scripts reused the existing opt-in control protocol; no permanent service or provider change.
+Physical keyboard/IME, VoiceOver, clipboard and private-workbook checks were not repeated.
 
 ## Current single-app deployment — 2026-11-05
 
 | Component | Installed / verified state |
 | --- | --- |
-| Normal app | GridCraft 0.16.1, native source `f5785668041bc35c22a0fe9265d5e4759b35074a` |
+| Normal app | GridCraft 0.16.1, native source `f43086bc7fce24d273549653956382106b7a3922` |
 | Underlying official release | `v0.16.1`, commit `e581bc95b2a17d2a744a115478a20a1c2ad1ef72` |
-| Signed native SHA-256 | `bf0c5910f56ceb41f839d089675c309d0192aa99c864d60215bea9efe89cf08d` |
+| Signed native SHA-256 | `fe4f83914ed46259d99cd242381d8dc94487c19fa251d8036f378c724909ec48` |
 | Assistant helper | 0.1.7 on Mini and MacBook; bridge protocol1 unchanged |
 | Update owner | Managed ArtCraft Launcher 0.14.1/source19170137; actual installed-launcher replacements passed on both Macs |
 | Local signing | Exact `stt-dev` certificate `D7B1B5524FFEB37AB01D3960017BDF6743E3EDFD`; not notarized or a public release |
@@ -51,9 +88,9 @@ fallback. The MacBook uses signed artifacts from the Mini, which must be reachab
 build. The app's own updater is disabled by its standard wrapper. Preserve the managed launcher,
 including its self-update protection; ordinary upstream app/launcher packages are not this route.
 
-The exact native above passed configured Codex/Terra/helper 0.1.6 candidate acceptance
+The previous native `f5785668` passed configured Codex/Terra/helper 0.1.6 candidate acceptance
 independently on both Macs (28.00s Mini / 14.38s MacBook): requested synthetic edit, no early save,
-Undo/Redo, explicit save/reopen and rendered output. After the protected installations,
+Undo/Redo, explicit save/reopen and rendered output. After those protected installations,
 no-model checks on the normal paths passed with helper 0.1.7 on both hosts: panel/status,
 control responses, light/dark composer outlines and update guidance. Screenshots were
 inspected; the bottom composer border is complete without clipping. The helper update was
