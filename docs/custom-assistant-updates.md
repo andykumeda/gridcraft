@@ -1,12 +1,28 @@
-# Customized assistant-enabled app updates
+# Integrated assistant app updates
 
-Status: implementation added 2026-11-02; no compatible release published or live update claimed.
+Status: **Deployed for GridCraft on both Macs**, 2026-11-05 (America/Los_Angeles).
+The active `/Applications/GridCraft.app` is 0.16.1/native `f5785668` with the integrated
+Assistant and shared helper 0.1.7. Active Preview apps and obsolete MCP shortcuts are retired;
+profiles, recovery data and shared AI data are preserved. Exact signed hashes/provenance,
+actual-model candidate checks and final installed no-model evidence are in
+[the current per-app ledger](assistant-v0161-rollout.md#current-single-app-deployment--2026-11-05).
+[The suite ledger](https://github.com/andykumeda/pdfcraft/blob/codex/independent-assistant/docs/single-app-assistant-rollout.md) owns overall progress; this app's deployment does not claim all four apps are complete.
 
-The independently installed assistant and the GridCraft app have separate update lifecycles.
-Attaching the shared assistant calls `configure_assistant_updates(bridge_protocol)` before update
-checks begin. The app then uses `craft-update` with an explicit custom release policy. Standard
-builds retain their existing updater. `--disable-updates` always blocks both startup and manual
-checks; configuring a source never overrides that opt-out.
+## Current update route
+
+Use the **managed ArtCraft Launcher 0.14.1/source19170137**, deployed on both Macs.
+It checks official release freshness, reconciles the exact requested tag with the Assistant
+source, runs checks/build/signing and verifies standard identity, exact certificate,
+assistant protocol/repository and signed underlying-release metadata before replacement.
+A failed build, unavailable build host or source conflict preserves the current app; there is
+no stock-package fallback. The MacBook receives signed artifacts from the Mini, which must be
+reachable for a new build. The trusted builder policy is configured in the user-owned
+`~/Library/Application Support/ArtCraft Launcher/assistant-updates.json`.
+
+The normal app wrapper disables its built-in updater. Preserve the managed launcher's own
+self-update protection too; ordinary upstream app/launcher packages are not this delivery route.
+The separately installed helper keeps its independent update lifecycle. Current source and
+installed checks are already recorded; this documentation-only closeout does not rerun CI.
 
 ## Single normal app packaging — 2026-11-05
 
@@ -33,10 +49,14 @@ cases, signed ZIP extraction, mounted DMG and copied-app strict signature checks
 identity, updater-only wrapper, absence of Preview profile overrides, signed protocol
 and underlying-source metadata, and binary version/source. Full `cargo xtask ci` passed all ten gates on 2026-11-05
 (`/private/tmp/gridcraft-standard-ci.log`), with the complete required font input
-`b076417b`. Native release rebuild, installed acceptance and launcher delivery are
-tracked in [the central suite ledger](../../pdfcraft/docs/single-app-assistant-rollout.md).
+`b076417b`. The optimized native rebuild and installed managed-launcher delivery are complete for GridCraft; current evidence is recorded above and in [the central suite ledger](https://github.com/andykumeda/pdfcraft/blob/codex/independent-assistant/docs/single-app-assistant-rollout.md).
 
-## Configure the app source
+## Historical built-in updater contract (not the current owner route)
+
+The source/configuration contract below is retained for developers. The owner's installed
+macOS wrapper disables this built-in app updater; use the managed launcher described above.
+
+### Configure the app source
 
 Add this app to `sources.json` in the shared assistant settings directory (macOS:
 `~/Library/Application Support/Craft/ai`; `CRAFT_AI_CONFIG_DIR` overrides that directory):
@@ -148,7 +168,7 @@ defers restart. Missing or failed helpers do not block app updates through stale
 See [candidate and installed-smoke evidence](assistant-candidates.md) for the correction and
 remaining live-update verification.
 
-## Current local rollout — 2026-11-03
+## Historical local rollout — 2026-11-03
 
 GridCraft production source e8f93495 is installed as standard on both Macs and as Preview on
 the Mini. Its reviewed shared-library pin remains 83e61084. The separately installed assistant

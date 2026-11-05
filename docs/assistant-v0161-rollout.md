@@ -1,6 +1,55 @@
-# GridCraft Assistant Preview 0.16.1 rollout
+# GridCraft 0.16.1 integrated assistant rollout
 
-Updated 2026-11-04. Status: **Deployed on both Macs**. Official source target:
+Status: **Deployed for GridCraft on both Macs**, 2026-11-05 (America/Los_Angeles).
+The active app is `/Applications/GridCraft.app` with the integrated Assistant; its separate
+Assistant Preview app and old MCP shortcut have been retired. This closes this app's workstream only. The
+[suite consolidation ledger](https://github.com/andykumeda/pdfcraft/blob/codex/independent-assistant/docs/single-app-assistant-rollout.md) owns overall progress; this per-app deployment does not claim all four apps are complete.
+
+## Current single-app deployment — 2026-11-05
+
+| Component | Installed / verified state |
+| --- | --- |
+| Normal app | GridCraft 0.16.1, native source `f5785668041bc35c22a0fe9265d5e4759b35074a` |
+| Underlying official release | `v0.16.1`, commit `e581bc95b2a17d2a744a115478a20a1c2ad1ef72` |
+| Signed native SHA-256 | `bf0c5910f56ceb41f839d089675c309d0192aa99c864d60215bea9efe89cf08d` |
+| Assistant helper | 0.1.7 on Mini and MacBook; bridge protocol1 unchanged |
+| Update owner | Managed ArtCraft Launcher 0.14.1/source19170137; actual installed-launcher replacements passed on both Macs |
+| Local signing | Exact `stt-dev` certificate `D7B1B5524FFEB37AB01D3960017BDF6743E3EDFD`; not notarized or a public release |
+
+Use the **managed ArtCraft Launcher** to check official release freshness and update this app.
+Its trusted source builder retains the Assistant, reconciles the requested official tag,
+runs the required checks and produces a signed normal bundle. The launcher verifies the
+standard identity, exact certificate, assistant protocol/repository and signed
+`CraftUnderlyingTag`/`CraftUnderlyingCommit` before replacement. Failed builds, unavailable
+build hosts or source conflicts leave the installed app intact; there is no stock-package
+fallback. The MacBook uses signed artifacts from the Mini, which must be reachable for a new
+build. The app's own updater is disabled by its standard wrapper. Preserve the managed launcher,
+including its self-update protection; ordinary upstream app/launcher packages are not this route.
+
+The exact native above passed configured Codex/Terra/helper 0.1.6 candidate acceptance
+independently on both Macs (28.00s Mini / 14.38s MacBook): requested synthetic edit, no early save,
+Undo/Redo, explicit save/reopen and rendered output. After the protected installations,
+no-model checks on the normal paths passed with helper 0.1.7 on both hosts: panel/status,
+control responses, light/dark composer outlines and update guidance. Screenshots were
+inspected; the bottom composer border is complete without clipping. The helper update was
+not qualified by repeating a paid model turn. Full source CI passed all ten gates;
+this documentation-only closeout does not rerun or imply new code checks.
+
+Evidence: `/private/tmp/gridcraft-standard-ci.log`,
+`/private/tmp/craft-single-app-evidence/grid-{mini,book}/` (actual-model candidates),
+and `/private/tmp/craft-single-app-evidence/grid-{mini,book}-installed/` (installed reports/rendered panels).
+Owned processes exited normally; listeners and task-owned control keys were cleaned up.
+Standard and old Preview profiles, recovery data, shared AI settings and conversations were
+preserved, without profile merging or credential copying. Active Preview bundles and obsolete
+MCP shortcuts were retired, and Preview installers archived under the per-host
+`~/Library/Application Support/Craft/retired-apps/2026-11-05-single-app.noindex/` record.
+No owner process was force-quit. Physical IME, clipboard and VoiceOver checks were not repeated.
+
+## Historical integration and Preview delivery (superseded)
+
+Everything below records earlier checkpoints, not the active installation policy.
+
+Historical checkpoint: Assistant Preview was deployed on both Macs on2026-11-04. Official source target:
 [`v0.16.1`](https://github.com/storytold/gridcraft/releases/tag/v0.16.1), commit
 `e581bc95b2a17d2a744a115478a20a1c2ad1ef72`. Preview binary source:
 `2b995d6d16303a2c49a2094c12d39cddc1b52265` on `codex/independent-assistant`.

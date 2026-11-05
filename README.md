@@ -344,20 +344,29 @@ Restricted graphics are omitted from this modified fork; their legal terms remai
 
 Based on GridCraft by the ArtCraft team. This assistant-enabled fork is independently modified.
 
-## Private assistant preview
+## Integrated Assistant and app updates
 
-The integrated [assistant preview](docs/assistant.md) adds a native workbook assistant using shared Craft providers. Open the toolbar **Assistant** button or **View → Assistant**. View places the icon-and-label Assistant control at the far right, outside the scrolling ribbon groups. Configure one model under **File → Options → Assistant**. Delivery status and checks are in the [implementation ledger](docs/assistant-implementation.md); [packaging](packaging/macos/assistant-preview.md) preserves the main installed application.
+Open `/Applications/GridCraft.app` on either Mac. The native [Assistant](docs/assistant.md)
+is integrated into this normal app; separate Preview apps are retired. Open the title-toolbar
+**Assistant** button or **View → Assistant**, which stays at the far right. Configure the selected
+model in the composer or **File → Options → Assistant**.
 
-The completed 0.16.1 update and per-Mac preview installation checks are tracked in the [current rollout ledger](docs/assistant-v0161-rollout.md).
+Use the **managed ArtCraft Launcher** to check underlying official releases and update the app
+without removing the panel. It verifies compatible signed source/protocol metadata before
+replacement; conflicts or failed builds preserve the current app. The normal wrapper disables
+its separate updater. Do not substitute ordinary upstream app or launcher packages.
+See [the current rollout ledger](docs/assistant-v0161-rollout.md#current-single-app-deployment--2026-11-05),
+[update policy](docs/custom-assistant-updates.md) and
+[the overall suite ledger](https://github.com/andykumeda/pdfcraft/blob/codex/independent-assistant/docs/single-app-assistant-rollout.md); this per-app record does not claim the whole suite is complete.
 
 ## Independently updated assistant (custom desktop builds)
 
 The desktop entry point uses a separately installed shared assistant for its embedded sidebar. Model/provider defaults and authentication are shared across PDFCraft, WordCraft and GridCraft; chats and document permissions remain separate. Initial app builds must include the bridge. Compatible assistant releases then update once for all three apps without rebuilding their binaries.
 
-The independently installed helper 0.1.6 uses **New chat**, **Chat history** and a settings gear above a rounded
+The independently installed helper 0.1.7 uses **New chat**, **Chat history** and a settings gear above a rounded
 composer with file `+` and model controls. Helper version, update checks and update status appear
-inside settings. The 0.16.1 Preview retains its compatible reviewed host bridge; the helper owns native Codex profile behavior. See the [current rollout ledger](docs/assistant-v0161-rollout.md) for per-device installation and native acceptance, and the [earlier integration ledger](docs/assistant-v016-integration.md) for the compact-panel history.
+inside settings. The normal 0.16.1 app retains its compatible reviewed host bridge; the helper owns native Codex profile behavior. See the [current rollout ledger](docs/assistant-v0161-rollout.md) for per-device installation and native acceptance, and the [earlier integration ledger](docs/assistant-v016-integration.md) for the compact-panel history.
 
 The sidebar uses the same complete MCP tool catalog and live application dispatcher as external agents, including command execution, windows, workbook creation/open/save, and screenshots. See [assistant MCP parity](docs/assistant-mcp-parity.md) for the behavior and verification boundary.
 
-See [custom assistant and app updates](docs/custom-assistant-updates.md) for configuration, approved updates and compatibility safeguards. Installed synthetic smoke and local signing are recorded in the [candidate ledger](docs/assistant-candidates.md). Native composition/clipboard/VoiceOver and published-feed update activation remain pending; the installed builds retain the active-assistant app-restart safeguard.
+See [custom assistant and app updates](docs/custom-assistant-updates.md) for configuration, approved updates and compatibility safeguards. Installed synthetic smoke and local signing are recorded in the [candidate ledger](docs/assistant-candidates.md). Physical IME/clipboard/VoiceOver checks and public notarized distribution remain outside this rollout; installed protected-launcher replacements and native panel checks are recorded in the current rollout ledger.

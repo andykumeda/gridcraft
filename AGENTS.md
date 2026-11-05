@@ -83,3 +83,7 @@ People trust GridCraft with their numbers; a crash loses their work. **This outr
 - Preserve standard and old Preview document profiles, shared assistant settings/chats,
   and rollback copies. Verify model/document behavior on each Mac before removing
   active Preview bundles. Never force-quit or overwrite unsaved work.
+- Preserve the managed ArtCraft Launcher and its self-update protection. Use its trusted
+  builder/verifier for app updates; do not replace it or the normal app with stock packages.
+  [Current per-app delivery](docs/assistant-v0161-rollout.md) and
+  [the suite ledger](https://github.com/andykumeda/pdfcraft/blob/codex/independent-assistant/docs/single-app-assistant-rollout.md) distinguish this app's completed deployment from remaining suite work.
