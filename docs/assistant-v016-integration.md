@@ -175,3 +175,11 @@ machine lacks the current manifest, leaving no bundled glyph for Vietnamese U+1E
 That locale check remains blocked by its font input; no locale coverage is claimed.
 The whole-workspace CI sweep, native VoiceOver and physical keyboard checks were not run.
 No dependency, font, provider or installed app was changed.
+
+## Follow-up: Preview 0.16.1 — 2026-11-04
+
+The [0.16.1 rollout ledger](assistant-v0161-rollout.md) supersedes the source-only toolbar
+installation status above: the signed Preview is now installed and natively qualified on both
+Macs. Exact CI with the official required font input passed all supported-locale checks,
+resolving the earlier optional-input locale-test limitation. Historical failed checks remain
+recorded above; the normal Codex account and shared helper 0.1.6 are retained.

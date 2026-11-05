@@ -130,4 +130,4 @@ Private assistant preview: [behavior](assistant.md) and [implementation/delivery
 
 - 2026-11-03 — Compact-panel rollout completed: GridCraft 0.16.0 production source e8f93495 installed on Mini/MacBook standard and existing Mini Preview, with independently updated helper 0.1.2 (3dda16ac). Exact CI all ten gates/3280 passing tests and final native gear/settings/MCP smoke passed; signed backups retained. Validation commit 2002be68 changes tests/docs only. No readiness estimate change.
 
-- 2026-11-04 — Assistant Preview 0.16.1 source integration retains custom assistant behavior; verification and per-Mac delivery are recorded in [the current rollout ledger](assistant-v0161-rollout.md). No readiness estimate change.
+- 2026-11-04 — Assistant Preview 0.16.1 is deployed on both Macs with exact CI and per-host native Terra/edit/Undo/save/reopen qualification; results are recorded in [the current rollout ledger](assistant-v0161-rollout.md). No readiness estimate change.

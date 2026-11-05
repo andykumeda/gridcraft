@@ -1,8 +1,8 @@
 # Integrated assistant preview
 
-Source update 2026-11-04: View places the Assistant control at the far right of the ribbon with the existing original comment icon, an accessible Assistant name and a tooltip. It stays visible while the other View groups scroll. The title-bar control and assistant toggle command are unchanged. Installed builds have not been replaced by this source update.
+Source update 2026-11-04: View places the Assistant control at the far right of the ribbon with the existing original comment icon, an accessible Assistant name and a tooltip. It stays visible while the other View groups scroll. The title-bar control and assistant toggle command are unchanged. The 0.16.1 Preview rollout installed this control on both Macs; see the delivery ledger below.
 
-Current source rollout (2026-11-04): GridCraft Assistant Preview **0.16.1** follows the official
+Current deployed Preview rollout (2026-11-04): GridCraft Assistant Preview **0.16.1** follows the official
 release while retaining the custom host and independently installed shared assistant **0.1.6**.
 See [the per-Mac delivery ledger](assistant-v0161-rollout.md) for installation and live-test status.
 The header provides **New chat**, **Chat history** and a

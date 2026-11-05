@@ -346,9 +346,9 @@ Based on GridCraft by the ArtCraft team. This assistant-enabled fork is independ
 
 ## Private assistant preview
 
-The integrated [assistant preview](docs/assistant.md) adds a native workbook assistant using shared Craft providers. Open the toolbar **Assistant** button or **View → Assistant**. In source builds, View places the icon-and-label Assistant control at the far right, outside the scrolling ribbon groups. Configure one model under **File → Options → Assistant**. Delivery status and checks are in the [implementation ledger](docs/assistant-implementation.md); [packaging](packaging/macos/assistant-preview.md) preserves the main installed application.
+The integrated [assistant preview](docs/assistant.md) adds a native workbook assistant using shared Craft providers. Open the toolbar **Assistant** button or **View → Assistant**. View places the icon-and-label Assistant control at the far right, outside the scrolling ribbon groups. Configure one model under **File → Options → Assistant**. Delivery status and checks are in the [implementation ledger](docs/assistant-implementation.md); [packaging](packaging/macos/assistant-preview.md) preserves the main installed application.
 
-The 0.16.1 source update and per-Mac preview installation checks are tracked in the [current rollout ledger](docs/assistant-v0161-rollout.md).
+The completed 0.16.1 update and per-Mac preview installation checks are tracked in the [current rollout ledger](docs/assistant-v0161-rollout.md).
 
 ## Independently updated assistant (custom desktop builds)
 
