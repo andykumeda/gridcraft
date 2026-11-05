@@ -348,15 +348,15 @@ Based on GridCraft by the ArtCraft team. This assistant-enabled fork is independ
 
 The integrated [assistant preview](docs/assistant.md) adds a native workbook assistant using shared Craft providers. Open the toolbar **Assistant** button or **View → Assistant**. In source builds, View places the icon-and-label Assistant control at the far right, outside the scrolling ribbon groups. Configure one model under **File → Options → Assistant**. Delivery status and checks are in the [implementation ledger](docs/assistant-implementation.md); [packaging](packaging/macos/assistant-preview.md) preserves the main installed application.
 
+The 0.16.1 source update and per-Mac preview installation checks are tracked in the [current rollout ledger](docs/assistant-v0161-rollout.md).
+
 ## Independently updated assistant (custom desktop builds)
 
 The desktop entry point uses a separately installed shared assistant for its embedded sidebar. Model/provider defaults and authentication are shared across PDFCraft, WordCraft and GridCraft; chats and document permissions remain separate. Initial app builds must include the bridge. Compatible assistant releases then update once for all three apps without rebuilding their binaries.
 
-The installed helper 0.1.2 uses **New chat**, **Chat history** and a settings gear above a rounded
+The independently installed helper 0.1.6 uses **New chat**, **Chat history** and a settings gear above a rounded
 composer with file `+` and model controls. Helper version, update checks and update status appear
-inside settings. GridCraft production source `e8f93495` retains its reviewed shared-library pin;
-the helper navigation update did not rebuild the host. See the [integration ledger](docs/assistant-v016-integration.md)
-for per-device installation and native acceptance.
+inside settings. The 0.16.1 Preview retains its compatible reviewed host bridge; the helper owns native Codex profile behavior. See the [current rollout ledger](docs/assistant-v0161-rollout.md) for per-device installation and native acceptance, and the [earlier integration ledger](docs/assistant-v016-integration.md) for the compact-panel history.
 
 The sidebar uses the same complete MCP tool catalog and live application dispatcher as external agents, including command execution, windows, workbook creation/open/save, and screenshots. See [assistant MCP parity](docs/assistant-mcp-parity.md) for the behavior and verification boundary.
 

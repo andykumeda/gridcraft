@@ -135,6 +135,7 @@ Ranked; estimates in Opus 5.5 agent-hours. Detail and the full beta-gate list in
 
 | Date | What landed |
 |---|---|
+| 2026-11-04 | Assistant Preview source reconciled with official 0.16.1; Assistant settings, far-right View control and updater opt-out retained. Per-device checks and delivery: docs/assistant-v0161-rollout.md. No readiness estimate change. |
 | 2026-11-04 | Private assistant source refinement: View pins its icon-and-label Assistant control at the right edge outside scrolling groups; title-bar behavior is retained. Verification and delivery status: docs/assistant-v016-integration.md. No readiness estimate change. |
 | 2026-11-02 | Dialogs take ranges by selection on the grid: reference boxes (RefEdit) with a collapse button that shrinks the dialog while the person selects, in Goal Seek, Solver (including the Model Range of Load/Save) and Data Analysis; while collapsed, the arrow keys move the selection and Shift+arrow extends it, and F4 cycles a reference's anchors |
 | 2026-11-02 | Python mode in the formula bar: Ctrl+Alt+Shift+P, `=PY` then Tab, or editing a Python cell edits its code in the formula bar, with Enter for a new line, Tab to indent and Ctrl+Enter to commit through `python.set`. The code still doesn't run |

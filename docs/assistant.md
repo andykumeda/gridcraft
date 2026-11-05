@@ -2,12 +2,14 @@
 
 Source update 2026-11-04: View places the Assistant control at the far right of the ribbon with the existing original comment icon, an accessible Assistant name and a tooltip. It stays visible while the other View groups scroll. The title-bar control and assistant toggle command are unchanged. Installed builds have not been replaced by this source update.
 
-Current compact-panel rollout (2026-11-03): GridCraft **0.16.0 (`e8f93495`)** uses the separately
-installed shared assistant **0.1.2**. The header provides **New chat**, **Chat history** and a
+Current source rollout (2026-11-04): GridCraft Assistant Preview **0.16.1** follows the official
+release while retaining the custom host and independently installed shared assistant **0.1.6**.
+See [the per-Mac delivery ledger](assistant-v0161-rollout.md) for installation and live-test status.
+The header provides **New chat**, **Chat history** and a
 settings gear; the rounded composer holds file `+`, model and Send/Stop controls. Quick model
 choices retain validated streaming/tool support and use an app override. Helper version, update
-checks and update status stay inside settings. See [the current integration ledger](assistant-v016-integration.md)
-for the per-device acceptance results. The older preview history below is retained as historical evidence.
+checks and update status stay inside settings. See [the earlier integration ledger](assistant-v016-integration.md)
+for the previous compact-panel acceptance results. The older preview history below is retained as historical evidence.
 
 For current source builds, the independently installed assistant now uses the complete external
 [MCP tool catalog and application dispatcher](assistant-mcp-parity.md). The restrictions described
