@@ -5,6 +5,38 @@ The active app is `/Applications/GridCraft.app` with the integrated Assistant; i
 Assistant Preview app and old MCP shortcut have been retired. This closes this app's workstream only. The
 [suite consolidation ledger](https://github.com/andykumeda/pdfcraft/blob/codex/independent-assistant/docs/single-app-assistant-rollout.md) owns overall progress; this per-app deployment does not claim all four apps are complete.
 
+## Official 0.18.0 reconciliation — 2026-11-09
+
+| Workstream | State | Acceptance and evidence |
+| --- | --- | --- |
+| Assistant source on official 0.18.0 | In progress | Reapply the 0.16.1-to-assistant delta over official `17cb3c83`; retain assistant panel, managed updater protection, and release ancestry. Formatting and shell syntax checks pass. Shared commit b347, resolved from a local Git checkout, passed a UI check, strict locked all-target UI Clippy, and 37 locked assistant unit tests. Earlier local-path checks passed three updater tests and the title-toolbar integration test. The full ten-gate CI passed with b347: 3,655 tests passed and four were ignored, including doctests. The prior macOS WASM dead-code warning remains. Source integration and delivery qualification remain pending. |
+| Protected installation | Not started | Run the managed launcher route only after source, build, package and assistant verification pass. Verify the installed app and underlying release on each Mac. |
+
+The current deployed 0.16.1 installation below remains the last verified release. The shared
+revision is published on the existing fork; no release build or installation is claimed.
+
+### Full CI attempt and upstream test race
+
+`cargo --offline --locked xtask ci` reached its workspace test gate after translation report,
+formatting and workspace Clippy passed. The desktop control-server test
+`a_silent_or_slow_peer_is_closed_at_the_auth_deadline` failed with macOS `EINVAL` when setting
+a read timeout on the slow socket; later gates were skipped. The unchanged official test file
+sets that timeout after waiting for another peer, by which time its peer can already have closed.
+A standalone synthetic Rust loopback probe reproduced `EINVAL` on 30/30 closed peers, and the
+original candidate test passed once and failed once in isolated retries. The test-only candidate
+fix sets both client timeouts immediately after connecting; production server behavior is unchanged.
+The corrected test passed in the focused workspace invocation and ten consecutive direct test-binary runs. A later user-requested pause stopped the first rerun during UI tests. After resumption, the full ten-gate CI passed at low priority with one build job and one test thread: 3,655 tests passed and four were ignored, including doctests. The WASM build retains its existing dead-code warning. Log: `/Volumes/X10 Pro/codex-craft-build-20261109/grid-b347-full-ci-low-priority.log`. No release package or installation is implied.
+
+### Matching CLI and MCP delivery
+
+| Workstream | State | Acceptance / remaining verification |
+| --- | --- | --- |
+| GridCraft 0.18.0 CLI | In progress | `cargo check --offline --locked -p gridcraft-cli` passed against local b347. Build `gridcraft-cli` from the exact verified integrated source with its locked inputs; verify version, signature and archive before staging a versioned installation. Preserve rollback and do not replace a running server. |
+| Codex MCP on both Macs | Not started | Inventory each existing command and arguments without exposing credentials. Mini currently points at `/Users/andy/.local/share/gridcraft/0.16.0/gridcraft-cli mcp` (verified 0.16.0); MacBook uses the version-selecting SHA-256 wrapper `/Users/andy/.local/share/gridcraft/gridcraft-mcp-wrapper mcp`; on 2026-11-09 it refused startup with exit 78 because the selected 0.16.1 approval digest file was absent, and MCP initialize failed. Preserve all connection arguments and config, retarget only the existing GridCraft command after the matching CLI is verified, and restart only a task-owned server. Run an MCP initialize/tool-list plus a disposable synthetic workbook read/edit on each host, confirming headless versus configured live-app routing. No user workbook or active conversation is touched. |
+
+The integrated standard app package contains the GUI executable, not the separately distributed
+CLI. The current headless MCP registration does not automatically attach to the open GUI.
+
 ## Top-toolbar Assistant placement — 2026-11-05
 
 | Workstream | Owner | State | Acceptance / evidence | Delivery |

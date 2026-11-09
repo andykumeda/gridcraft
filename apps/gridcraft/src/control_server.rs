@@ -420,12 +420,13 @@ mod tests {
         assert_eq!(got[1]["ok"], json!(false));
     }
 
-    /// Whether the server closed `c` (end of stream, or a refusal and then end of stream) within
-    /// `within`, and how long it took.
+    /// Whether the server closed `c` and how long it took; set a timeout when one is supplied.
     #[allow(clippy::disallowed_methods)] // a native-only test of the desktop app
-    fn closed_within(c: TcpStream, within: Duration) -> (bool, Duration) {
+    fn closed_within(c: TcpStream, timeout: Option<Duration>) -> (bool, Duration) {
         let start = Instant::now();
-        c.set_read_timeout(Some(within)).unwrap();
+        if let Some(timeout) = timeout {
+            c.set_read_timeout(Some(timeout)).unwrap();
+        }
         let mut r = BufReader::new(c);
         let mut line = String::new();
         loop {
@@ -450,6 +451,9 @@ mod tests {
 
         let silent = TcpStream::connect(addr).unwrap();
         let mut slow = TcpStream::connect(addr).unwrap();
+        // macOS can reject a timeout set after the peer has already closed.
+        silent.set_read_timeout(Some(Duration::from_secs(5))).unwrap();
+        slow.set_read_timeout(Some(Duration::from_secs(5))).unwrap();
         let mut drip = slow.try_clone().unwrap();
         std::thread::spawn(move || {
             for b in control_auth::auth_line(1, TOKEN).bytes() {
@@ -459,9 +463,9 @@ mod tests {
                 std::thread::sleep(Duration::from_millis(50));
             }
         });
-        let (closed, took) = closed_within(silent, Duration::from_secs(5));
+        let (closed, took) = closed_within(silent, None);
         assert!(closed && took < Duration::from_secs(3), "silent peer kept for {took:?}");
-        let (closed, took) = closed_within(slow.try_clone().unwrap(), Duration::from_secs(5));
+        let (closed, took) = closed_within(slow.try_clone().unwrap(), None);
         assert!(closed && took < Duration::from_secs(3), "byte-at-a-time peer kept for {took:?}");
         let _ = slow.flush();
     }
@@ -478,7 +482,7 @@ mod tests {
         let mut first = TcpStream::connect(addr).unwrap();
         let _second = TcpStream::connect(addr).unwrap();
         std::thread::sleep(Duration::from_millis(200));
-        let (closed, took) = closed_within(TcpStream::connect(addr).unwrap(), Duration::from_secs(5));
+        let (closed, took) = closed_within(TcpStream::connect(addr).unwrap(), Some(Duration::from_secs(5)));
         assert!(closed && took < Duration::from_secs(3), "a third waiting connection was kept");
 
         first.set_read_timeout(Some(Duration::from_secs(5))).unwrap();

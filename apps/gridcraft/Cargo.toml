@@ -34,7 +34,7 @@ winit = { version = "0.30", default-features = false, features = ["x11", "waylan
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 # Same craft-libs revision as the workspace's craft-update and craft-window (see the root
 # Cargo.toml).
-craft-print = { git = "https://github.com/andykumeda/craft-libs", rev = "83e61084dee3117d34f95600d6ec68bad8b0b9b5" }
+craft-print = { git = "https://github.com/andykumeda/craft-libs", rev = "b3474c019d28054396931e8e295cec1b44e60009" }
 craft-update = { workspace = true }
 rfd = { workspace = true }
 arboard = { workspace = true, features = ["image-data"] }

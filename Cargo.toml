@@ -4,16 +4,16 @@ members = ["crates/*", "apps/*", "xtask"]
 default-members = ["crates/*", "apps/gridcraft", "apps/gridcraft-cli", "xtask"]
 
 [workspace.package]
-version = "0.16.1"
+version = "0.18.0"
 edition = "2024"
 license = "MIT OR Apache-2.0"
 rust-version = "1.95"
 repository = "https://github.com/storytold/gridcraft"
 
 [workspace.dependencies]
-craft-assistant = { git = "https://github.com/andykumeda/craft-libs", rev = "83e61084dee3117d34f95600d6ec68bad8b0b9b5", version = "0.1.0" }
-craft-ai-core = { git = "https://github.com/andykumeda/craft-libs", rev = "83e61084dee3117d34f95600d6ec68bad8b0b9b5" }
-craft-ai-native = { git = "https://github.com/andykumeda/craft-libs", rev = "83e61084dee3117d34f95600d6ec68bad8b0b9b5" }
+craft-assistant = { git = "https://github.com/andykumeda/craft-libs", rev = "b3474c019d28054396931e8e295cec1b44e60009", version = "0.1.0" }
+craft-ai-core = { git = "https://github.com/andykumeda/craft-libs", rev = "b3474c019d28054396931e8e295cec1b44e60009" }
+craft-ai-native = { git = "https://github.com/andykumeda/craft-libs", rev = "b3474c019d28054396931e8e295cec1b44e60009" }
 # internal
 gridcraft-core = { path = "crates/core" }
 gridcraft-numfmt = { path = "crates/numfmt" }
@@ -29,8 +29,9 @@ gridcraft-mcp = { path = "crates/mcp" }
 gridcraft-pdf = { path = "crates/pdf" }
 gridcraft-math = { path = "crates/math" }
 # Every craft-libs crate (craft-update and craft-window here, craft-ui in ui-egui, craft-print in
-# the app and assistant services) comes from one reviewed assistant-enabled craft-libs revision.
-craft-update = { git = "https://github.com/andykumeda/craft-libs", rev = "83e61084dee3117d34f95600d6ec68bad8b0b9b5", version = "=0.1.0", features = ["egui"] }
+# the app) comes from one craft-libs revision.
+# craft-update: app-specific pretend versions apply to startup and manual checks.
+craft-update = { git = "https://github.com/andykumeda/craft-libs", rev = "b3474c019d28054396931e8e295cec1b44e60009", version = "=0.1.0", features = ["egui"] }
 
 # foundation
 thiserror = "2"
@@ -73,7 +74,7 @@ skrifa = { version = "0.44", default-features = false, features = ["std"] }
 epaint_default_fonts = "0.37"
 # One native window per workbook: the window list, Window menu titles and the immediate-viewport
 # driver. Same craft-libs revision as craft-update above.
-craft-window = { version = "0.1.0", git = "https://github.com/andykumeda/craft-libs", rev = "83e61084dee3117d34f95600d6ec68bad8b0b9b5", default-features = false, features = ["egui"] }
+craft-window = { version = "0.1.0", git = "https://github.com/andykumeda/craft-libs", rev = "b3474c019d28054396931e8e295cec1b44e60009", default-features = false, features = ["egui"] }
 
 [workspace.lints.rust]
 unsafe_code = "forbid"

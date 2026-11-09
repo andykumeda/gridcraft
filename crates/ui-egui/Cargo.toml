@@ -13,13 +13,14 @@ craft-ai-core = { workspace = true }
 gridcraft-mcp = { workspace = true }
 # The shared capture slot (`craft_ui::capture`) comes from the one craft-libs revision every
 # craft-libs dependency uses (see the root Cargo.toml).
-craft-ui = { git = "https://github.com/andykumeda/craft-libs", rev = "83e61084dee3117d34f95600d6ec68bad8b0b9b5" }
+craft-ui = { git = "https://github.com/andykumeda/craft-libs", rev = "b3474c019d28054396931e8e295cec1b44e60009" }
 gridcraft-engine = { workspace = true }
 gridcraft-chart = { workspace = true }
 # `monochrome_emoji_fonts` restores the Noto Emoji and emoji-icon faces that 0.37 moved behind
 # this feature. The UI draws ✕, ◀, ↘ and 📋 as text; without these faces the strict kittest
 # harness (and a host with no symbol font) renders them as tofu.
 egui = { workspace = true, features = ["default_fonts", "monochrome_emoji_fonts"] }
+egui_extras = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 log = { workspace = true }
