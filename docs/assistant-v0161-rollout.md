@@ -27,15 +27,18 @@ original candidate test passed once and failed once in isolated retries. The tes
 fix sets both client timeouts immediately after connecting; production server behavior is unchanged.
 The corrected test passed in the focused workspace invocation and ten consecutive direct test-binary runs. A later user-requested pause stopped the first rerun during UI tests. After resumption, the full ten-gate CI passed at low priority with one build job and one test thread: 3,655 tests passed and four were ignored, including doctests. The WASM build retains its existing dead-code warning. Log: `/Volumes/X10 Pro/codex-craft-build-20261109/grid-b347-full-ci-low-priority.log`. No release package or installation is implied.
 
-### Matching CLI and MCP delivery
+### GridCraft 0.18.0 integrated delivery — 2026-11-09
 
-| Workstream | State | Acceptance / remaining verification |
+| Workstream | State | Evidence and remaining limitations |
 | --- | --- | --- |
-| GridCraft 0.18.0 CLI | In progress | `cargo check --offline --locked -p gridcraft-cli` passed against local b347. Build `gridcraft-cli` from the exact verified integrated source with its locked inputs; verify version, signature and archive before staging a versioned installation. Preserve rollback and do not replace a running server. |
-| Codex MCP on both Macs | Not started | Inventory each existing command and arguments without exposing credentials. Mini currently points at `/Users/andy/.local/share/gridcraft/0.16.0/gridcraft-cli mcp` (verified 0.16.0); MacBook uses the version-selecting SHA-256 wrapper `/Users/andy/.local/share/gridcraft/gridcraft-mcp-wrapper mcp`; on 2026-11-09 it refused startup with exit 78 because the selected 0.16.1 approval digest file was absent, and MCP initialize failed. Preserve all connection arguments and config, retarget only the existing GridCraft command after the matching CLI is verified, and restart only a task-owned server. Run an MCP initialize/tool-list plus a disposable synthetic workbook read/edit on each host, confirming headless versus configured live-app routing. No user workbook or active conversation is touched. |
+| Integrated application | Deployed | Signed standard app built from merge `b28dd31f3b703572a7815f93c0207a935761e6e8`, including official v0.18.0 `17cb3c83d9e73df6a88ed174cec612f1de2e8244` and shared assistant revision `b3474c019d28054396931e8e295cec1b44e60009`. Installed signature and version verified on Mini and MacBook. The release build used one low-priority job and the pinned release fonts and translations. The configured launcher adapter was not exercised; it currently hardcodes two build jobs. |
+| Matching CLI and MCP | Deployed | Signed 0.18.0 CLI SHA-256 `6d122a5556060c1eb2fd52fbecceb4b6e700a4374d2e52eb9dd034a26b0592cd` installed with a digest record on each Mac. Mini's existing MCP command now points to that CLI with its existing `mcp --connect 7979` arguments. MacBook's integrity wrapper and `mcp --connect 127.0.0.1:7979` arguments remain unchanged. Both configured routes initialized, listed 22 tools, and edited and read back a disposable workbook against a task-owned app. The previously missing MacBook 0.16.1 digest remains historical; its 0.18.0 wrapper check passes. |
+| Assistant panel | Verified | Both installed apps passed actual toolbar open/close, helper 0.1.7 handshake and configured-model display in an isolated profile, with protected profiles unchanged. Receipts: Mini `/private/tmp/gridcraft-toolbar-native-t4be7hsc/report.json`; MacBook `/private/tmp/gridcraft-toolbar-native-mieljkcb/report.json`. No live model inference was requested, so this does not establish a new inference or assistant edit test. |
+| Rollback | Verified | Each host retains an independently extracted and signature-verified 0.16.1 rollback ZIP: Mini `~/Library/Caches/Craft Integrated Builds/gridcraft/codex-b28-stage/rollback-0.16.1.zip`; MacBook `~/Library/Caches/codex-grid-b28-stage/rollback-0.16.1.zip`. Their extracted native binary hashes match the old installations. Automatic approval review rejected recursive removal of the redundant `old-GridCraft.app` and `rollback-check` directories under those same staging directories; those copies remain in the caches and were not removed. The active app on each host is `/Applications/GridCraft.app`. |
 
-The integrated standard app package contains the GUI executable, not the separately distributed
-CLI. The current headless MCP registration does not automatically attach to the open GUI.
+The integrated standard app package contains the GUI executable; the matching CLI is distributed
+separately. The configured MCP routes attach to an explicitly started local app and retain their
+existing connection arguments. Existing user documents were not used for smoke testing.
 
 ## Top-toolbar Assistant placement — 2026-11-05
 
